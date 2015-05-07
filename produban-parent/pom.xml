@@ -36,10 +36,10 @@
 		<!-- <module>../produban-spark-streaming-scala</module> -->
 		<module>../produban-indexer</module>
 		<module>../produban-api</module>
-		<module>../produban-akamai-api</module>
 		<module>../produban-manager</module>
 		<module>../produban-data</module>
-		<module>../produban-akamai-bin</module>
+		<module>../produban-cache</module>
+		<module>../produban-metrics-api</module>
 	</modules>
 
 	<build>
