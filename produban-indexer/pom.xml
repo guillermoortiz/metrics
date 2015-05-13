@@ -18,6 +18,11 @@
 			<artifactId>produban-util</artifactId>
 			<version>${produban.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>com.produban.core</groupId>
+			<artifactId>produban-api</artifactId>
+			<version>${produban.version}</version>
+		</dependency>
 	
 		<dependency>
 			<groupId>org.elasticsearch</groupId>

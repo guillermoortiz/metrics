@@ -5,10 +5,6 @@ import java.util.Arrays;
 import com.produban.api.general.Factory;
 import com.produban.api.general.K;
 import com.produban.api.manager.CacheManager;
-import com.produban.cache.Cache;
-import com.produban.cache.redis.RedisCache;
-import com.produban.metrics.entities.PL_EM_ORDEN;
-import com.produban.metrics.entities.ULTALTA;
 
 /**
  * Class to parse codes in the messages with the final value through a cache.

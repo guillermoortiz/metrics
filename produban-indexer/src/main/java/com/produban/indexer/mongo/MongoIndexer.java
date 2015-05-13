@@ -81,4 +81,16 @@ public class MongoIndexer implements Indexer, Serializable {
 		
 		return collection;
 	}
+
+	@Override
+	public void indexJson(String jsonToIndex, String indexName, String docType) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void indexJson(String jsonToIndex, String docType) {
+		// TODO Auto-generated method stub
+		
+	}
 }

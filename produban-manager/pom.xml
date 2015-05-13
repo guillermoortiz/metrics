@@ -4,27 +4,33 @@
 	<parent>
 		<groupId>com.produban.core</groupId>
 		<artifactId>produban-parent</artifactId>
-		<version>1.00-SNAPSHOT</version>		
-	</parent>	
-	
+		<version>1.00-SNAPSHOT</version>
+	</parent>
+
 	<groupId>com.produban.core</groupId>
 	<artifactId>produban-manager</artifactId>
-	<version>${produban.version}</version>	
+	<version>${produban.version}</version>
 	<name>Module Manager </name>
-	
 
-	<dependencies>	
+
+	<dependencies>
 		<dependency>
 			<groupId>com.produban.core</groupId>
 			<artifactId>produban-api</artifactId>
 			<version>${produban.version}</version>
-		</dependency>	
-		
+		</dependency>
 		<dependency>
 			<groupId>com.produban.core</groupId>
-			<artifactId>produban-data</artifactId>
+			<artifactId>produban-cache</artifactId>
 			<version>${produban.version}</version>
 		</dependency>
-	
+
+		<dependency>
+			<groupId>com.produban.core</groupId>
+			<artifactId>produban-indexer</artifactId>
+			<version>${produban.version}</version>
+		</dependency>
+
+
 	</dependencies>
 </project>

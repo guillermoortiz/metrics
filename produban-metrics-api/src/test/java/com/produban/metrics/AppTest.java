@@ -1,6 +1,6 @@
 package com.produban.metrics;
 
-import com.produban.metrics.util.Factory;
+import com.produban.metrics.util.FactoryCreator;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -59,7 +59,7 @@ public class AppTest
     	pLine = "OpenBank;Intranet;Celda0;PL_EM_ORDEN";
     	pLines = pLine.split(";");
     	
-    	Factory.createPL_EM_ORDEN(pLines,lines);
+    	FactoryCreator.createPL_EM_ORDEN(pLines,lines);
     	
     	
     }

@@ -1,5 +1,5 @@
 /eclipse-classes
+/target
+/.settings
 /.classpath
 /.project
-/.settings
-/eclipse-classes

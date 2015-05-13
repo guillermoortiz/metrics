@@ -20,6 +20,10 @@ import com.produban.indexer.api.Indexer;
  */
 public class ElasticIndexer implements Indexer, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	String indexName;
 	String docType;
 	String clusterName;
@@ -47,6 +51,87 @@ public class ElasticIndexer implements Indexer, Serializable {
 		this.nodesElastic = elasticSearchNodes;
 
 	}
+	
+	public ElasticIndexer(String clusterName,
+			String elasticSearchNodes) {		
+		this.clusterName = clusterName;
+		this.nodesElastic = elasticSearchNodes;
+
+	}
+	
+	
+	
+	
+	public ElasticIndexer(String indexName, String clusterName,
+			String nodesElastic) {
+		super();
+		this.indexName = indexName;
+		this.clusterName = clusterName;
+		this.nodesElastic = nodesElastic;
+	}
+
+	public ElasticIndexer() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.produban.elastic.Indexer#indexJson(java.lang.String)
+	 */
+	@Override
+	public void indexJson(final String jsonToIndex, final String indexName, final String docType) {
+
+		Client client = getClient();
+		IndexResponse response = client.prepareIndex(indexName, docType)
+				.setSource(jsonToIndex).execute().actionGet();
+
+		if (LOG.isDebugEnabled()) {
+			StringBuilder sb = new StringBuilder();
+			sb.append("JSON:" + jsonToIndex);
+			sb.append(" Index:");
+			sb.append(response.getIndex());
+			sb.append(" Id:");
+			sb.append(response.getId());
+			sb.append(" Type:");
+			sb.append(response.getType());
+			sb.append(" Index:");
+			LOG.debug(sb.toString());
+		}
+		LOG.info("Document indexed");
+		cleanup(client);
+	}
+	
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.produban.elastic.Indexer#indexJson(java.lang.String)
+	 */
+	@Override
+	public void indexJson(final String jsonToIndex, final String docType) {
+
+		Client client = getClient();
+		IndexResponse response = client.prepareIndex(indexName, docType)
+				.setSource(jsonToIndex).execute().actionGet();
+
+		if (LOG.isDebugEnabled()) {
+			StringBuilder sb = new StringBuilder();
+			sb.append("JSON:" + jsonToIndex);
+			sb.append(" Index:");
+			sb.append(response.getIndex());
+			sb.append(" Id:");
+			sb.append(response.getId());
+			sb.append(" Type:");
+			sb.append(response.getType());
+			sb.append(" Index:");
+			LOG.debug(sb.toString());
+		}
+		LOG.info("Document indexed");
+		cleanup(client);
+	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -128,4 +213,37 @@ public class ElasticIndexer implements Indexer, Serializable {
 		return transportClient;
 	}
 
+	public String getIndexName() {
+		return indexName;
+	}
+
+	public void setIndexName(String indexName) {
+		this.indexName = indexName;
+	}
+
+	public String getDocType() {
+		return docType;
+	}
+
+	public void setDocType(String docType) {
+		this.docType = docType;
+	}
+
+	public String getClusterName() {
+		return clusterName;
+	}
+
+	public void setClusterName(String clusterName) {
+		this.clusterName = clusterName;
+	}
+
+	public String getNodesElastic() {
+		return nodesElastic;
+	}
+
+	public void setNodesElastic(String nodesElastic) {
+		this.nodesElastic = nodesElastic;
+	}
+
+	
 }
