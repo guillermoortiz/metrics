@@ -2,17 +2,12 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="
-		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans
 		http://www.springframework.org/schema/beans/spring-beans.xsd">
-
-	<alias name="configurationManagerImpl" alias="configurationManager" />
-	<bean id="configurationManagerImpl" class="com.produban.manager.ConfigurationManagerImpl">				    	
-			<property name="configurationDAO" ref="configurationDAO" />					
-	</bean>
 	
-	<alias name="rulesManagerImpl" alias="rulesManager" />
-	<bean id="rulesManagerImpl"  class="com.produban.manager.RulesManagerImpl">				    	
-			<property name="rulesDAO" ref="rulesDAO" />					
+	<alias name="cacheManager" alias="cacheManager" />
+	<bean id="cacheManager"  class="com.produban.manager.CacheManagerImpl">				    	
+			<property name="cache" ref="cacheRedis" />					
 	</bean>
 	
 </beans>

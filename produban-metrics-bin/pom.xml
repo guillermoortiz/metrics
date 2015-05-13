@@ -5,17 +5,17 @@
 		<groupId>com.produban.core</groupId>
 		<artifactId>produban-parent</artifactId>
 		<version>1.00-SNAPSHOT</version>
+		<relativePath>../produban-parent</relativePath>
 	</parent>
 	<groupId>com.produban.core</groupId>
-	<artifactId>produban-metrics-api</artifactId>
+	<artifactId>produban-metrics-bin</artifactId>
 	<version>${produban.version}</version>
-	<name>Module Produban API Metrics </name>
-
+	<name>Module Metrics Bin</name>
 
 	<dependencies>
 		<dependency>
 			<groupId>com.produban.core</groupId>
-			<artifactId>produban-cache</artifactId>
+			<artifactId>produban-util</artifactId>
 			<version>${produban.version}</version>
 		</dependency>
 		<dependency>
@@ -23,6 +23,19 @@
 			<artifactId>produban-api</artifactId>
 			<version>${produban.version}</version>
 		</dependency>
+		
+		<dependency>
+			<groupId>com.produban.core</groupId>
+			<artifactId>produban-manager</artifactId>
+			<version>${produban.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.produban.core</groupId>
+			<artifactId>produban-metrics-spark</artifactId>
+			<version>${produban.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
@@ -30,5 +43,4 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
 </project>

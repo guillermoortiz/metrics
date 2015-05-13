@@ -4,13 +4,13 @@
 	<parent>
 		<groupId>com.produban.core</groupId>
 		<artifactId>produban-parent</artifactId>
-		<version>1.00-SNAPSHOT</version>	
+		<version>1.00-SNAPSHOT</version>		
 	</parent>
 	<groupId>com.produban.core</groupId>
 	<artifactId>produban-util</artifactId>
-	<version>${produban.version}</version>	
+	<version>${produban.version}</version>
 	<name>Module Utilities classes</name>
-	
+
 
 	<dependencies>
 		<dependency>
@@ -18,24 +18,36 @@
 			<artifactId>commons-codec</artifactId>
 		</dependency>
 		<dependency>
-		   <groupId>commons-lang</groupId>
-		   <artifactId>commons-lang</artifactId>
-		   <version>2.6</version>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.6</version>
 		</dependency>
 		<dependency>
-		   <groupId>commons-io</groupId>
-		   <artifactId>commons-io</artifactId>
-		   <version>2.4</version>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.jackson</groupId>
 			<artifactId>jackson-mapper-asl</artifactId>
 			<version>${jackson.version}</version>
-		</dependency>	
+		</dependency>
 		<dependency>
 			<groupId>com.esotericsoftware.kryo</groupId>
 			<artifactId>kryo</artifactId>
 			<version>2.24.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId>hadoop-client</artifactId>
+			<version>2.2.0</version>			
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.kafka</groupId>
+			<artifactId>kafka_2.10</artifactId>
+			<version>0.8.2.1</version>			
+		</dependency>
+
 	</dependencies>
 </project>

@@ -30,16 +30,16 @@
 	</properties>
 
 	<modules>
+		<module>../produban-cache</module>	
 		<module>../produban-util</module>
-		<module>../produban-injector</module>
-		<module>../produban-spark-streaming</module>
-		<!-- <module>../produban-spark-streaming-scala</module> -->
+		<module>../produban-injector</module>				
 		<module>../produban-indexer</module>
 		<module>../produban-api</module>
 		<module>../produban-manager</module>
-		<module>../produban-data</module>
-		<module>../produban-cache</module>
+		<!-- <module>../produban-data</module>-->				
+		<module>../produban-metrics-spark</module>
 		<module>../produban-metrics-api</module>
+		<module>../produban-metrics-bin</module>
 	</modules>
 
 	<build>
@@ -225,12 +225,7 @@
 	</dependencies>
 
 	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>commons-codec</groupId>
-				<artifactId>commons-codec</artifactId>
-				<version>1.4</version>
-			</dependency>
+		<dependencies>			
 			<dependency>
 				<groupId>mysql</groupId>
 				<artifactId>mysql-connector-java</artifactId>

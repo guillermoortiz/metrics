@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:context="http://www.springframework.org/schema/context"
+   xsi:schemaLocation="
+      http://www.springframework.org/schema/beans 
+      http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+      http://www.springframework.org/schema/context 
+      http://www.springframework.org/schema/context/spring-context-3.2.xsd">
+	
+	<context:property-placeholder location="classpath:redis.properties" />
+	
+	<alias name="cacheRedis" alias="cacheRedis" />
+	<bean id="cacheRedis" class="com.produban.cache.redis.RedisCache">	
+		<property name="jedisPool" ref="jedisPool"></property>
+    </bean>
+
+	
+	<alias name="jedisPool" alias="jedisPool" />
+	<bean id="jedisPool" class="redis.clients.jedis.JedisPool">   	   
+        <constructor-arg index="0" ref="jedisPoolConfig" />     
+        <constructor-arg index="1"  value="${redis.host}" />            
+    </bean>
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig" ></bean>
+	
+</beans>

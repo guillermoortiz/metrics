@@ -18,6 +18,12 @@
 			<version>${produban.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>com.produban.core</groupId>
+			<artifactId>produban-cache</artifactId>
+			<version>${produban.version}</version>
+		</dependency>
+		
+		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>
 			<version>${spring.version}</version>
