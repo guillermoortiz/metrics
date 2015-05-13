@@ -39,10 +39,4 @@ public class CacheManagerImpl implements CacheManager {
 		cache.setBulkLoad(values);
 
 	}
-	
-	public static void main(String[] args) {
-		//Factory.getA();
-		Factory.getCacheManager().set("aa","bb");
-		System.out.println(Factory.getCacheManager().get("aa"));
-	}
 }

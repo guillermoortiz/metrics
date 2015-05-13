@@ -20,11 +20,4 @@ public class IndexerManagerImpl implements IndexerManager {
 	public void setIndexer(Indexer indexer) {
 		this.indexer = indexer;
 	}
-
-	public static void main(String[] args) {
-		//Factory.getA();
-		Factory.getIndexerManager().indexDocument("A", "B");		
-	}
-
-	
 }
