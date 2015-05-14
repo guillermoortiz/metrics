@@ -89,7 +89,7 @@ public class RedisCache implements Cache {
 		try {
 			redis = jedisPool.getResource();
 
-			for (Pair<String, String> pair : values) {
+			for (Pair<String, String> pair : values) {				
 				redis.set(pair.getKey(), pair.getValue());
 			}
 

@@ -5,6 +5,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.math3.util.Pair;
 import org.apache.log4j.Logger;
 
 import com.mongodb.DB;
@@ -90,6 +91,18 @@ public class MongoIndexer implements Indexer, Serializable {
 
 	@Override
 	public void indexJson(String jsonToIndex, String docType) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void indexJsons(String docType, String[] jsonsToIndex) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void indexJsons(Pair<String, String>[] documents) {
 		// TODO Auto-generated method stub
 		
 	}

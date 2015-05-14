@@ -2,6 +2,7 @@ package com.produban.indexer.elastic;
 
 import java.io.Serializable;
 
+import org.apache.commons.math3.util.Pair;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.index.IndexResponse;
@@ -51,17 +52,13 @@ public class ElasticIndexer implements Indexer, Serializable {
 		this.nodesElastic = elasticSearchNodes;
 
 	}
-	
-	public ElasticIndexer(String clusterName,
-			String elasticSearchNodes) {		
+
+	public ElasticIndexer(String clusterName, String elasticSearchNodes) {
 		this.clusterName = clusterName;
 		this.nodesElastic = elasticSearchNodes;
 
 	}
-	
-	
-	
-	
+
 	public ElasticIndexer(String indexName, String clusterName,
 			String nodesElastic) {
 		super();
@@ -81,7 +78,8 @@ public class ElasticIndexer implements Indexer, Serializable {
 	 * @see com.produban.elastic.Indexer#indexJson(java.lang.String)
 	 */
 	@Override
-	public void indexJson(final String jsonToIndex, final String indexName, final String docType) {
+	public void indexJson(final String jsonToIndex, final String indexName,
+			final String docType) {
 
 		Client client = getClient();
 		IndexResponse response = client.prepareIndex(indexName, docType)
@@ -102,8 +100,7 @@ public class ElasticIndexer implements Indexer, Serializable {
 		LOG.info("Document indexed");
 		cleanup(client);
 	}
-	
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -131,7 +128,6 @@ public class ElasticIndexer implements Indexer, Serializable {
 		LOG.info("Document indexed");
 		cleanup(client);
 	}
-
 
 	/*
 	 * (non-Javadoc)
@@ -185,6 +181,58 @@ public class ElasticIndexer implements Indexer, Serializable {
 
 			LOG.info("Document indexed");
 			cleanup(client);
+		} catch (Exception e) {
+			LOG.info("Error " + e);
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void indexJsons(final String docType, final String[] jsonsToIndex) {
+		try {
+			Client client = getClient();
+			BulkRequestBuilder bulkRequest = client.prepareBulk();
+
+			for (String json : jsonsToIndex) {
+				bulkRequest.add(client.prepareIndex(indexName, docType)
+						.setSource(json));
+			}
+
+			BulkResponse bulkResponse = bulkRequest.execute().actionGet();
+			if (bulkResponse.hasFailures()) {
+				LOG.error("Error indexing JSON to ElasticSearch "
+						+ bulkResponse.buildFailureMessage());
+			}
+
+			LOG.info("Document indexed");
+			cleanup(client);
+		} catch (Exception e) {
+			LOG.info("Error " + e);
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public void indexJsons(Pair<String, String>[] documents) {
+		try {
+			if (documents.length > 0){
+				Client client = getClient();
+				BulkRequestBuilder bulkRequest = client.prepareBulk();
+	
+				for (Pair<String, String> pair : documents) {
+					bulkRequest.add(client.prepareIndex(indexName, pair.getFirst())
+							.setSource(pair.getSecond()));
+				}
+	
+				BulkResponse bulkResponse = bulkRequest.execute().actionGet();
+				if (bulkResponse.hasFailures()) {
+					LOG.error("Error indexing JSON to ElasticSearch "
+							+ bulkResponse.buildFailureMessage());
+				}
+	
+				LOG.info("Document indexed");
+				cleanup(client);
+			}
 		} catch (Exception e) {
 			LOG.info("Error " + e);
 			e.printStackTrace();
@@ -245,5 +293,4 @@ public class ElasticIndexer implements Indexer, Serializable {
 		this.nodesElastic = nodesElastic;
 	}
 
-	
 }

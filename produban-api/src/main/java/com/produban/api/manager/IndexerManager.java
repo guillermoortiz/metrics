@@ -1,5 +1,6 @@
 package com.produban.api.manager;
 
+import org.apache.commons.math3.util.Pair;
 
 
 /**
@@ -8,5 +9,7 @@ package com.produban.api.manager;
  *
  */
 public interface IndexerManager {
-	public void indexDocument(final String document, final String documentType);	
+	public abstract void indexDocument(final String document, final String documentType);
+	public abstract void indexDocuments(String[] documents, String documentType); 
+	public abstract void indexDocuments(Pair<String, String>[] documents);
 }

@@ -1,6 +1,5 @@
 package com.produban.metrics
 
-import scala.collection.JavaConverters._
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
@@ -22,31 +21,44 @@ import com.produban.metrics.util.FactoryParser
 import com.produban.indexer.elastic.ElasticIndexer
 import com.produban.metrics.util.FactoryCreator
 import scala.collection.JavaConverters
+import org.apache.commons.math3.util.Pair
 
-object SparkKafkaSQL {
+object MetricsSpark {
 
-  def createObject(message: Array[String], topic: Array[String]): String = {
-    var obj: Array[String] = new Array[String](message.length)
+  /**
+   * Create a Tuple (documentType,json)
+   */
+  def createObject(message: Array[String], topic: Array[String]): (String,String) = {
+    var documentType: String = ""
     var json: String = ""
 
     if (topic(3).equals("PL_EM_ORDEN")) {
       val messageFiltered = FactoryParser.parser(topic, message)
-      json = JsonUtil.write(FactoryCreator.createPL_EM_ORDEN(topic, messageFiltered))
+      val obj = FactoryCreator.createPL_EM_ORDEN(topic, messageFiltered)
+      documentType = obj.getDATOS_P().getTabla()
+      json = JsonUtil.write(obj)
     }
-    return json
+    return (documentType,json)
   }
-
   
-  def executeMetrics(topics : Array[String], kafkaHosts : String, appName : String, masterConf : String) {    
+  def main(args: Array[String]) {
+    if (args.length != 2){
+      println("It's neccesary two parameter");
+      println("First, zookeeper paratemers separater by ,. Ex: quickstart01.cloudera:9092,quickstart02.cloudera:9092");
+      println("Second, name of the topics to read separater by ,. Ex: topic1,topic2");
+      System.exit(-1);
+    }
     
-    
-    
-    val sparkConf = new SparkConf().setMaster(masterConf).setAppName(appName)
+       
+    val sparkConf = new SparkConf().setMaster("local[2]").setAppName("app")
+    //val sparkConf = new SparkConf()
     val ssc = new StreamingContext(sparkConf, Seconds(5))
-
-   
-    val kafkaParams = Map[String, String]("metadata.broker.list" -> kafkaHosts)
-    val topics = Set("OB.MATRIX.HOST.PL_EM_ORDEN") //, "internalOpManager", "presOpManager")
+    
+    
+    //val kafkaParams = Map[String, String]("metadata.broker.list" -> kafkaHosts)
+    val kafkaParams = Map[String, String]("metadata.broker.list" -> args(0))
+    val topics = args(1).split("\\,")
+    //val topics = Set("OB.MATRIX.HOST.PL_EM_ORDEN") //, "internalOpManager", "presOpManager")
     val directKafkaStream = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, topics.toSet)
 
     directKafkaStream.foreachRDD { rdd =>
@@ -58,20 +70,25 @@ object SparkKafkaSQL {
         val topic = osr.topic
         val splitTopic = topic.split("\\.")
 
-        //generate tuples(topicName,jsonMessage) for each message got from Kafka
+        //generate tuples(documentType,jsonMessage) for each message got from Kafka
         kafkaEvent.map { event =>
           val splitMessage = event._2.split("\\|")
-          (splitTopic(3), createObject(splitMessage, splitTopic))
+          createObject(splitMessage, splitTopic)
         }
       }
 
       //Index each document in ElasticSearch
       documents.foreachPartition { it =>
         val indexer = Factory.getIndexerManager()
-        it.foreach { document =>
-          //TODO Change the code to do in a bulkload for performance
-          indexer.indexDocument(document._2, document._1)
-        }
+        
+        //TODO It could be done with Tuple2 directly, it should include scala-library dependency in produban-manager module
+        val documentsPair = it.map(document => new Pair(document._1,document._2))
+        indexer.indexDocuments(documentsPair.toArray)
+
+        //Less efficient.
+//        it.foreach { document =>         
+//          indexer.indexDocument(document._2, document._1)
+//        }
       }
     }
 

@@ -1,6 +1,7 @@
 package com.produban.manager;
 
-import com.produban.api.general.Factory;
+import org.apache.commons.math3.util.Pair;
+
 import com.produban.api.manager.IndexerManager;
 import com.produban.indexer.api.Indexer;
 
@@ -12,6 +13,12 @@ public class IndexerManagerImpl implements IndexerManager {
 		indexer.indexJson(document, documentType);		
 	}
 	
+
+	@Override
+	public void indexDocuments(String[] documents, String documentType) {
+		indexer.indexJsons(documentType, documents);		
+		
+	}
 	
 	public Indexer getIndexer() {
 		return indexer;
@@ -20,4 +27,13 @@ public class IndexerManagerImpl implements IndexerManager {
 	public void setIndexer(Indexer indexer) {
 		this.indexer = indexer;
 	}
+
+
+	@Override
+	public void indexDocuments(Pair<String, String>[] documents) {
+		indexer.indexJsons(documents);	
+		
+	}
+
+
 }

@@ -35,9 +35,12 @@ public class LoadCache {
 
 		switch (table) {
 		case CENTRO:
+			lines = HDFSUtils.readHDFS(PATH_CENTRO);
+			//filterLines = filterList(lines, K.CACHE.TABLE_CENTRO_ID, x, x);
 			break;
 		case EMPRESA_PRODUCT:
-
+			lines = HDFSUtils.readHDFS(PATH_EMPRESA_PRODUCT);
+			//filterLines = filterList(lines, K.CACHE.TABLE_EMPRESA_PRODUCT_ID, x, x);
 			break;
 		case ENTIDAD_CREDITO:
 			lines = HDFSUtils.readHDFS(PATH_ENTIDAD_CREDITO);
@@ -49,18 +52,22 @@ public class LoadCache {
 
 			break;
 		case HH_DATOS_BANCOS:
-
+			lines = HDFSUtils.readHDFS(PATH_HH_DATOS_BANCOS);
+			//filterLines = filterList(lines, K.CACHE.TABLE_HH_DATOS_BANCOS_ID, x, x);
 			break;
 		case HH_TRANSF_EMIT:
-
+			lines = HDFSUtils.readHDFS(PATH_HH_TRANSF_EMIT);
+			//filterLines = filterList(lines, K.CACHE.TABLE_HH_TRANSF_EMIT_ID, x, x);
 			break;
 
 		case OFICI_BANCARIA:
-
+			lines = HDFSUtils.readHDFS(PATH_OFICI_BANCARIA);
+			//filterLines = filterList(lines, K.CACHE.TABLE_OFI_BANCARIA_ID, x, x);
 			break;
 
 		case OFI_ENT_EXT:
-
+			lines = HDFSUtils.readHDFS(PATH_OFI_ENT_EXT);
+			//filterLines = filterList(lines, K.CACHE.TABLE_OFI_ENT_EXT_ID, x, x);
 			break;
 
 		case PAIS:
@@ -69,7 +76,8 @@ public class LoadCache {
 			break;
 
 		case PLAZA:
-
+			lines = HDFSUtils.readHDFS(PATH_PLAZA);
+			//filterLines = filterList(lines, K.CACHE.TABLE_PLAZA_ID, x, x);
 			break;
 
 		case PROVINCIA:

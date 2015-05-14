@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.log4j.Logger;
@@ -20,11 +21,7 @@ public final class HDFSUtils {
 	/**
 	 * Instance of the log object.
 	 */
-	private static final Logger LOG = Logger.getLogger(HDFSUtils.class);
-	/**
-	 * Constant for buffer size.
-	 */
-	public static final int BUFFER_SIZE = 1024;
+	private static final Logger LOG = Logger.getLogger(HDFSUtils.class);	
 
 	/**
 	 * Private constructor, only static methods.
@@ -52,11 +49,26 @@ public final class HDFSUtils {
 				line = bufferedReader.readLine();
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOG.error("Error reading file " + pathFile, e);			
 		}
 		return lines;
 	}
 
+	public static long lastModification(final String pathFile) {
+		long modificationTime = 0l;
+		try {
+			Path path = new Path(pathFile);
+			Configuration conf = new Configuration();
+			FileSystem fileSystem = FileSystem.get(conf);
+
+			FileStatus status = fileSystem.getFileStatus(path);
+			modificationTime = status.getModificationTime();
+			
+		} catch (IOException e) {
+			LOG.error("Error reading file " + pathFile, e);		
+		}
+		return modificationTime;
+	}
 	
 
 	public static void main(String[] args) throws URISyntaxException {

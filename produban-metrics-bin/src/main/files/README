@@ -1,0 +1,29 @@
+#Install Metrics.
+
+#create this directories
+mkdir -p /usr/metrics/lib
+mkdir -p /usr/metrics/conf
+mkdir -p /usr/metrics/ex
+mkdir -p /usr/metrics/bin
+
+#Copy configuration files
+cp redis.properties /usr/metrics/conf/
+cp elasticSearch.properties /usr/metrics/conf/
+
+#Configure the properties files with hosts for redis and ES
+
+#Copy scripts 
+cp loadCache.sh /usr/metrics/bin/
+cp metrics.sh /usr/metrics/bin/
+chmod 777 /usr/metrics/bin/loadCache.sh
+chmod 777 /usr/metrics/bin/metrics.sh
+
+#Copy libraries.
+#You must copy all the jars to /usr/metrics/lib/ except produban-metrics-spark.jar. It means copy as well all the dependencies.
+#You must copy produban-metrics-spark.jar to /usr/metrics/ex/
+#The Hadoop Configuration should be in /etc/hadoop/conf/
+
+
+
+
+
