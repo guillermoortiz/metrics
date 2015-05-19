@@ -17,6 +17,20 @@ public interface Indexer {
 	 */
 	public abstract void indexJson(String jsonToIndex);
 
+	
+	/**
+	 * 
+	 * Method to index an JSON to a indexer.
+	 * 
+	 * @param jsonToIndex
+	 *            json to index
+	 * @param id
+	 *            id for the json
+	 * @param docType
+	 *            type of the document
+	 */
+	public abstract void indexWithId(final String jsonToIndex,
+			final String id, final String docType);
 	/**
 	 * 
 	 * Method to index an JSON to a indexer.

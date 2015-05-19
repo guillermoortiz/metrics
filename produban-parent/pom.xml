@@ -30,11 +30,11 @@
 	</properties>
 
 	<modules>
-		<module>../produban-cache</module>	
-		<module>../produban-util</module>					
+		<module>../produban-cache</module>
+		<module>../produban-util</module>
 		<module>../produban-indexer</module>
 		<module>../produban-api</module>
-		<module>../produban-manager</module>				
+		<module>../produban-manager</module>
 		<module>../produban-metrics-spark</module>
 		<module>../produban-metrics-api</module>
 		<module>../produban-metrics-bin</module>
@@ -103,10 +103,21 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-assembly-plugin</artifactId> 
-				<configuration> <descriptor>src/assembly/bin.xml</descriptor> <finalName>apache-maven-cookbook-${pom.version}</finalName> 
-				</configuration> <executions> <execution> <phase>package</phase> <goals> 
-				<goal>single</goal> </goals> </execution> </executions> </plugin> -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<configuration>
+					<descriptor>src/assembly/bin.xml</descriptor>					
+				</configuration>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 
 		<pluginManagement>
@@ -223,7 +234,7 @@
 	</dependencies>
 
 	<dependencyManagement>
-		<dependencies>			
+		<dependencies>
 			<dependency>
 				<groupId>mysql</groupId>
 				<artifactId>mysql-connector-java</artifactId>

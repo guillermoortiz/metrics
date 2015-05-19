@@ -156,6 +156,29 @@ public class ElasticIndexer implements Indexer, Serializable {
 		LOG.info("Document indexed");
 		cleanup(client);
 	}
+	
+
+	@Override
+	public void indexWithId(String jsonToIndex, String id, String docType) {
+		Client client = getClient();
+		IndexResponse response = client.prepareIndex(indexName, docType, id)
+				.setSource(jsonToIndex).execute().actionGet();
+
+		if (LOG.isDebugEnabled()) {
+			StringBuilder sb = new StringBuilder();
+			sb.append("JSON:" + jsonToIndex);
+			sb.append(" Index:");
+			sb.append(response.getIndex());
+			sb.append(" Id:");
+			sb.append(response.getId());
+			sb.append(" Type:");
+			sb.append(response.getType());
+			sb.append(" Index:");
+			LOG.debug(sb.toString());
+		}
+		LOG.info("Document indexed");
+		cleanup(client);
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -293,4 +316,23 @@ public class ElasticIndexer implements Indexer, Serializable {
 		this.nodesElastic = nodesElastic;
 	}
 
+	public static void main(String[] args) {
+		ElasticIndexer index = new ElasticIndexer("elasticsearch", "quickstart.cloudera:9300");
+		
+		//90 id 51-54
+		String rdd1 = "10|\"IBM\"|\"2015114\"|\"102126523991\"|\"ORN01\"|\"HH_TRANSF_EMIT\"|\"ISRT\"|\"0000:1d95:e702:fda1:0002\"|\"0000:ced8:45dd:2983:0001\"|\"2015-04-24-08.21.26\"|\"HH83I \"|0000||||||||||||||||||||||||||||||||||||||||\"0049\"|“0015\"|\"696\"|\"0HKUJ17\"|\"001\"|\"PE\"|\"EBA\"|\"O\"|11,0|“GBP\"|22,0|\"EUR\"|11,0|\"EUR\"|\"N\"|\"O\"|\"SHA\"|\"IND \"|\"T \"|1|\"2015-04-24\"|\"2015-04-24\"|\"0001-01-01\"|\"2015-04-24-10.21.25.776829\"|\"2015-04-23\"|\"0001-01-01\"|\"SOGE\"|\"FR01\"|\"FR\"|\"N \"|\"0000002\"|\"RED\"|\" \"|\"N\"|\"E\"|\"1\"|\"DEFSL2 \"|\"2015-04-24\"|\"N\"";
+		//30 , id 21-24-  La B en la pos25
+		String rdd2 = "10|\"IBM\"|\"2015114\"|\"102126523991\"|\"ORN01\"|\"HH_DATOS_BANCOS\"|\"ISRT\"|\"0000:1d95:e702:fda1:0002\"|\"0000:ced8:45dd:2983:0001\"|\"2015-04-24-08.21.26\"|\"HH83I \"|0000||||||||||\"0049\"|\"5494\"|\"696\"|\"0HKUJ17\"|\"B\"|“BNPA\"|“BE01\"|\"DEFSL2 \"|\"2015-04-24\"";
+		
+		String[] a1 = rdd1.split("\\|");
+		String[] a2 = rdd2.split("\\|");
+		
+		String indexName = "test";
+		String docType = "type1";
+		String jonsToIndex = "{name : \"guillermo\"}";
+		String jonsToIndex2 = "{name : \"guillermo2\"}";
+		index.indexJson(jonsToIndex, indexName, docType);
+	}
+
+	
 }
