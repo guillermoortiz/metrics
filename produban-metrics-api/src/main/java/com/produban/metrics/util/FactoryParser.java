@@ -154,7 +154,7 @@ public class FactoryParser implements KMetrics {
 		String tpv = StringUtils.substring(dgoParam, 260, 270);
 		String comercio = StringUtils.substring(dgoParam, 270, 295);
 		String codLocalidad = String.valueOf(Integer.parseInt(
-				StringUtils.substring(dgoParam, 295, 308), 16));
+				StringUtils.substring(dgoParam, 295, 308), 16)); 
 
 		String localidad = cache.get(codLocalidad, K.CACHE.TABLE_PLAZA_ID);
 		String[] recordProvincia = cache.get(codLocalidad,
