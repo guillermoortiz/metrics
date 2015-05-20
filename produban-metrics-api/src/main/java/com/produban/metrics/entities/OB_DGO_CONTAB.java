@@ -2,14 +2,15 @@ package com.produban.metrics.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class OB_DGO_CONTAB implements Serializable{
+import com.produban.metrics.util.FMetrics;
+
+public class OB_DGO_CONTAB implements Serializable, FMetrics{
 	
 	/**
 	 * 
@@ -100,20 +101,35 @@ public class OB_DGO_CONTAB implements Serializable{
 		this.setDATOS_Q(new QCaptureMeta(line));
 		this.setDATOS_P(new ProdubanMeta(produbanLine));
 		
-		this.CODIGO_EMPRESA=line[QCaptureMeta.numFields+1];
-		this.CODIGO_CENTRO=line[QCaptureMeta.numFields+2];		
-		this.PUESTO_FISICO=line[QCaptureMeta.numFields+3];
+		
+		
+		Integer offset=0;
+		
+		
+		// Insert events add some irrelevant fields we need to offset
+		if (this.DATOS_Q.getEvento() == QCaptureMeta.tipo_evento.ISRT)
+		{
+			offset = FOB_DGO_CONTAB.OFFSET_ISRT;
+		}
+		else
+		{
+			offset = FOB_DGO_CONTAB.OFFSET_UKWN;
+		}
+		
+		this.CODIGO_EMPRESA=line[FQCaptureMeta.OFFSET_numFields+offset+FOB_DGO_CONTAB.IDXT_CODIGO_EMPRESA];
+		this.CODIGO_CENTRO=line[FQCaptureMeta.OFFSET_numFields+offset+FOB_DGO_CONTAB.IDXT_CODIGO_CENTRO];		
+		this.PUESTO_FISICO=line[FQCaptureMeta.OFFSET_numFields+offset+FOB_DGO_CONTAB.IDXT_PUESTO_FISICO];
 		
 		DecimalFormat df = new DecimalFormat();
 		DecimalFormatSymbols dfs = new DecimalFormatSymbols();
 		
-		dfs.setDecimalSeparator(',');		
+		dfs.setDecimalSeparator(COMMONS.DECIMAL_SEPARATOR);		
 		df.setDecimalFormatSymbols(dfs);
 		String importe="";
 		Number Nimporte;
 		
 		try {
-			importe = line[QCaptureMeta.numFields+12];
+			importe = line[FQCaptureMeta.OFFSET_numFields+offset+FOB_DGO_CONTAB.IDXT_IMPORTE_OPERACION_BANCARIA];
 			Nimporte = df.parse(importe);
 			this.IMPORTE_OPERACION_BANCARIA= new BigDecimal(Nimporte.toString());			
 			
@@ -122,13 +138,13 @@ public class OB_DGO_CONTAB implements Serializable{
 			e.printStackTrace();
 		}
 				
-		this.MONEDA=line[QCaptureMeta.numFields+13];
+		this.MONEDA=line[FQCaptureMeta.OFFSET_numFields+offset+FOB_DGO_CONTAB.IDXT_MONEDA];
 		
-		SimpleDateFormat datetimeFormatter1 = new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSS");
+		SimpleDateFormat datetimeFormatter1 = new SimpleDateFormat(COMMONS.DATE_FORMAT);
 		
 		try {
 			String fecha;
-			fecha = line[QCaptureMeta.numFields+14].substring(0, 23);
+			fecha = line[FQCaptureMeta.OFFSET_numFields+offset+FOB_DGO_CONTAB.IDXT_FECHA_OPERACION].substring(0, 23);
 			this.FECHA_OPERACION = datetimeFormatter1.parse(fecha);
 			
 		} catch (ParseException e) {
@@ -136,11 +152,11 @@ public class OB_DGO_CONTAB implements Serializable{
 		}
 		
 		
-		this.USUARIO=line[QCaptureMeta.numFields+25];
+		this.USUARIO=line[FQCaptureMeta.OFFSET_numFields+offset+FOB_DGO_CONTAB.IDXT_USUARIO];
 
 		try {
 			String fecha;
-			fecha = line[QCaptureMeta.numFields+26].substring(0, 23);
+			fecha = line[FQCaptureMeta.OFFSET_numFields+offset+FOB_DGO_CONTAB.IDXT_TIMESTAMP_EJECUCION].substring(0, 23);
 			this.TIMESTAMP_EJECUCION = datetimeFormatter1.parse(fecha);
 			
 		} catch (ParseException e) {

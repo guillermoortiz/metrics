@@ -10,14 +10,15 @@ public class QCaptureMeta implements Serializable {
 	
 	/**
 	 * 
-	 */
+	 */	
 	private static final long serialVersionUID = 6910222250421531608L;
 
-	public static final int numFields = 11;
+	
+	public enum tipo_evento { ISRT, REPL, DLET, UKWN };
 	
 	private String owner;
 	private String tabla;
-	private String evento;
+	private tipo_evento evento;
 	private Date fecha_hora;
 	private String plan;
 	
@@ -34,10 +35,10 @@ public class QCaptureMeta implements Serializable {
 	public void setTabla(String tabla) {
 		this.tabla = tabla;
 	}
-	public String getEvento() {
+	public tipo_evento getEvento() {
 		return evento;
 	}
-	public void setEvento(String evento) {
+	public void setEvento(tipo_evento evento) {
 		this.evento = evento;
 	}
 	public Date getFecha_hora() {
@@ -84,16 +85,49 @@ public class QCaptureMeta implements Serializable {
 				
 		this.owner = line[4];
 		this.tabla = line[5];
-		this.evento = line[6];
+		switch (line[6].toUpperCase()){
+		case "ISRT":
+			this.evento = QCaptureMeta.tipo_evento.ISRT;
+			break;
+		case "REPL":
+			this.evento = QCaptureMeta.tipo_evento.REPL;
+			break;
+		case "DLET":
+			this.evento = QCaptureMeta.tipo_evento.DLET;
+			break;
+		default:
+			this.evento = QCaptureMeta.tipo_evento.UKWN;			
+			break;
+		}
+		
 		this.plan = line[10];
 
 	}
 	@Override
 	public String toString() {
+		
+		String lEvento="";
+		
+		switch (this.evento){
+		case ISRT:
+			lEvento="ISRT";
+			break;
+		case REPL:
+			lEvento="REPL";
+			break;
+		case DLET:
+			lEvento="DLET";
+			break;
+		default:
+			lEvento="UKWN";			
+			break;
+		}
+		
 		return "QCaptureMeta [owner=" + owner + ", tabla=" + tabla
-				+ ", evento=" + evento + ", fecha_hora=" + fecha_hora
+				+ ", evento=" + lEvento + ", fecha_hora=" + fecha_hora
 				+ ", plan=" + plan + "]";
 	}
+	
 	
 	
 }

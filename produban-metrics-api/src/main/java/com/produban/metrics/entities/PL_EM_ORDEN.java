@@ -1,13 +1,16 @@
 package com.produban.metrics.entities;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class PL_EM_ORDEN implements Serializable {
+import com.produban.metrics.util.FMetrics;
+
+public class PL_EM_ORDEN implements Metrics, FMetrics {
 
 	/**
 	 * 
@@ -19,9 +22,8 @@ public class PL_EM_ORDEN implements Serializable {
 	
 	// Data from Q-Capture
 	private QCaptureMeta DATOS_Q;
-	
-	
-	
+		
+	// Table relevant data
 	//   E5604_IDEMPORD, index 6 + DATOS_Q.numFields; (12)	
 	private String EMPRESA_ORDENANTE;
 	//   E5604_IDCENORD index 7 + DATOS_Q.numFields; (12)
@@ -53,11 +55,19 @@ public class PL_EM_ORDEN implements Serializable {
 	//   E5604_TIMESMOD index 28 + DATOS_Q.numFields; (12)
 	private Timestamp TIMESTAMP_MODIFICACION;            
 	//   E5604_IMPPAG00 index 37 + DATOS_Q.numFields; (12)
-	private BigDecimal IMPORTE_PAGOS;
-	//   E5604_CODMON index 38 + DATOS_Q.numFields; (12)
-	private String CODIGO_MONEDA;
-	//   E5604_INDREM index 43 + DATOS_Q.numFields; (12)
-	private String PAGO_DE_REMESA;              
+	private String PAGO_DE_REMESA;
+	
+	// User requested data
+	private BigDecimal Importe;
+	private String Moneda;
+	private String Banco_Origen;
+	private String Localidad_Origen;
+	private String Provincia_Origen;
+	private String Pais_Origen;
+	private String Banco_Destino;
+	private String Localidad_Destino;
+	private String Provincia_Destino;
+	private String Pais_Destino;
 
 	public QCaptureMeta getDATOS_Q() {
 		return DATOS_Q;
@@ -155,18 +165,7 @@ public class PL_EM_ORDEN implements Serializable {
 	public void setTIMESTAMP_MODIFICACION(Timestamp tIMESTAMP_MODIFICACION) {
 		TIMESTAMP_MODIFICACION = tIMESTAMP_MODIFICACION;
 	}
-	public BigDecimal getIMPORTE_PAGOS() {
-		return IMPORTE_PAGOS;
-	}
-	public void setIMPORTE_PAGOS(BigDecimal iMPORTE_PAGOS) {
-		IMPORTE_PAGOS = iMPORTE_PAGOS;
-	}
-	public String getCODIGO_MONEDA() {
-		return CODIGO_MONEDA;
-	}
-	public void setCODIGO_MONEDA(String cODIGO_MONEDA) {
-		CODIGO_MONEDA = cODIGO_MONEDA;
-	}
+	
 	public String getPAGO_DE_REMESA() {
 		return PAGO_DE_REMESA;
 	}
@@ -184,45 +183,122 @@ public class PL_EM_ORDEN implements Serializable {
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+	
+	public BigDecimal getImporte() {
+		return Importe;
+	}
+	public void setImporte(BigDecimal importe) {
+		Importe = importe;
+	}
+	public String getMoneda() {
+		return Moneda;
+	}
+	public void setMoneda(String moneda) {
+		Moneda = moneda;
+	}
+	public String getBanco_Origen() {
+		return Banco_Origen;
+	}
+	public void setBanco_Origen(String banco_Origen) {
+		Banco_Origen = banco_Origen;
+	}
+	public String getLocalidad_Origen() {
+		return Localidad_Origen;
+	}
+	public void setLocalidad_Origen(String localidad_Origen) {
+		Localidad_Origen = localidad_Origen;
+	}
+	public String getProvincia_Origen() {
+		return Provincia_Origen;
+	}
+	public void setProvincia_Origen(String provincia_Origen) {
+		Provincia_Origen = provincia_Origen;
+	}
+	public String getPais_Origen() {
+		return Pais_Origen;
+	}
+	public void setPais_Origen(String pais_Origen) {
+		Pais_Origen = pais_Origen;
+	}
+	public String getBanco_Destino() {
+		return Banco_Destino;
+	}
+	public void setBanco_Destino(String banco_Destino) {
+		Banco_Destino = banco_Destino;
+	}
+	public String getLocalidad_Destino() {
+		return Localidad_Destino;
+	}
+	public void setLocalidad_Destino(String localidad_Destino) {
+		Localidad_Destino = localidad_Destino;
+	}
+	public String getProvincia_Destino() {
+		return Provincia_Destino;
+	}
+	public void setProvincia_Destino(String provincia_Destino) {
+		Provincia_Destino = provincia_Destino;
+	}
+	public String getPais_Destino() {
+		return Pais_Destino;
+	}
+	public void setPais_Destino(String pais_Destino) {
+		Pais_Destino = pais_Destino;
+	}
 
-	public PL_EM_ORDEN(String[] produbanLine, String[] line) {
-		// Add QCaptureMeta.numFields for field offset		
+
+	public PL_EM_ORDEN(String[] produbanLine, String[] line, String[] fields) {
 		
-		this.DATOS_Q = new QCaptureMeta(line);
-		this.DATOS_P = new ProdubanMeta(produbanLine);
+		// Local variables
 		
+		// For money conversions
+		DecimalFormat df = new DecimalFormat();
+		DecimalFormatSymbols dfs = new DecimalFormatSymbols();
+		String Simporte="";
+		Number Nimporte;
+		
+		// Offset to add in case off ISRT that adds a series of "|" at the begining
 		Integer offset=0;
 		
+		// For Gregorian date formatting
+		SimpleDateFormat datetimeFormatter1 = new SimpleDateFormat(COMMONS.DATE_FORMAT);
+		Date lFromDate1 = null;
 		
+		// Data relevant to Q-Capture
+		this.DATOS_Q = new QCaptureMeta(line);
+		
+		// Data relevant to Produban (Entidad, Sistema, Celda, Tabla) 
+		this.DATOS_P = new ProdubanMeta(produbanLine);
+		
+		this.DATOS_P.setTabla(COMMONS.NPL_EM_ORDEN);
+				
 		// Insert events add some irrelevant fields we need to offset
 		if (this.DATOS_Q.getEvento() == QCaptureMeta.tipo_evento.ISRT)
 		{
-			offset = 0;
+			offset = FPL_EM_ORDEN.OFFSET_ISRT;
 		}
 		else
 		{
-			offset = 0;
+			offset = FPL_EM_ORDEN.OFFSET_UKWN;
 		}
 		
+		// Table relevant data
+		this.EMPRESA_ORDENANTE = line[FQCaptureMeta.OFFSET_numFields+offset+FPL_EM_ORDEN.IDXT_EMPRESA_ORDENANTE];
+		this.CENTRO_ORDENANTE = line[FQCaptureMeta.OFFSET_numFields+offset+FPL_EM_ORDEN.IDXT_CENTRO_ORDENANTE];
+		this.ESTADO_PAGO = line[FQCaptureMeta.OFFSET_numFields+offset+FPL_EM_ORDEN.IDXT_ESTADO_PAGO];
+		this.TIPO_ORDEN = line[FQCaptureMeta.OFFSET_numFields+offset+FPL_EM_ORDEN.IDXT_TIPO_ORDEN];
+		this.CODIGO_PAIS  = line[FQCaptureMeta.OFFSET_numFields+offset+offset+FPL_EM_ORDEN.IDXT_CODIGO_PAIS]; 
+		this.INDICADOR_RESIDENTE = line[FQCaptureMeta.OFFSET_numFields+offset+FPL_EM_ORDEN.IDXT_INDICADOR_RESIDENTE];
+		this.MEDIO_FINANCIERO = line[FQCaptureMeta.OFFSET_numFields+offset+FPL_EM_ORDEN.IDXT_MEDIO_FINANCIERO];
+		this.INDICADOR_INMEDIATEZ = line[FQCaptureMeta.OFFSET_numFields+offset+FPL_EM_ORDEN.IDXT_INDICADOR_INMEDIATEZ];
+		this.CODIGO_EMPRESA_DESTINO = line[FQCaptureMeta.OFFSET_numFields+offset+FPL_EM_ORDEN.IDXT_CODIGO_EMPRESA_DESTINO];
+		this.CODIGO_CENTRO_DESTINO  = line[FQCaptureMeta.OFFSET_numFields+offset+FPL_EM_ORDEN.IDXT_CANAL_OPERACION];
+		this.CANAL_OPERACION = line[FQCaptureMeta.OFFSET_numFields+offset+FPL_EM_ORDEN.IDXT_CANAL_OPERACION];
+		this.USUARIO_ALTA = line[FQCaptureMeta.OFFSET_numFields+offset+FPL_EM_ORDEN.IDXT_USUARIO_ALTA];
 		
-		this.EMPRESA_ORDENANTE = line[QCaptureMeta.numFields+offset+6];
-		this.CENTRO_ORDENANTE = line[QCaptureMeta.numFields+offset+7];
-		this.ESTADO_PAGO = line[QCaptureMeta.numFields+offset+8];
-		this.TIPO_ORDEN = line[QCaptureMeta.numFields+offset+9];
-		this.CODIGO_PAIS  = line[QCaptureMeta.numFields+offset+offset+10]; 
-		this.INDICADOR_RESIDENTE = line[QCaptureMeta.numFields+offset+11];
-		this.MEDIO_FINANCIERO = line[QCaptureMeta.numFields+offset+12];
-		this.INDICADOR_INMEDIATEZ = line[QCaptureMeta.numFields+offset+13];
-		this.CODIGO_EMPRESA_DESTINO = line[QCaptureMeta.numFields+offset+20];
-		this.CODIGO_CENTRO_DESTINO  = line[QCaptureMeta.numFields+offset+21];
-		this.CANAL_OPERACION = line[QCaptureMeta.numFields+offset+22];
-		this.USUARIO_ALTA = line[QCaptureMeta.numFields+offset+25];
 		
-		SimpleDateFormat datetimeFormatter1 = new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSS");
-		Date lFromDate1 = null;
 		try {
 			String fecha;
-			fecha = line[QCaptureMeta.numFields+26].substring(0, 23);
+			fecha = line[FQCaptureMeta.OFFSET_numFields+FPL_EM_ORDEN.IDXT_TIMESPTAMP_ALTA].substring(0, 23);
 			lFromDate1 = datetimeFormatter1.parse(fecha);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
@@ -230,32 +306,50 @@ public class PL_EM_ORDEN implements Serializable {
 		}
 
 		this.TIMESPTAMP_ALTA = new Timestamp(lFromDate1.getTime());		
-		this.USUARIO_MODIFICACION = line[QCaptureMeta.numFields+27];
+		this.USUARIO_MODIFICACION = line[FQCaptureMeta.OFFSET_numFields+FPL_EM_ORDEN.IDXT_USUARIO_ALTA];
 		
 		try {
 			String fecha;
-			fecha = line[QCaptureMeta.numFields+28].substring(0, 23);
+			fecha = line[FQCaptureMeta.OFFSET_numFields+FPL_EM_ORDEN.IDXT_TIMESTAMP_MODIFICACION].substring(0, 23);
 			lFromDate1 = datetimeFormatter1.parse(fecha);
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-				
+		}		
 		this.TIMESTAMP_MODIFICACION  = new Timestamp(lFromDate1.getTime());
+
+		this.PAGO_DE_REMESA  = line[FQCaptureMeta.OFFSET_numFields+FPL_EM_ORDEN.IDXT_PAGO_DE_REMESA];
 		
-		try{
-			this.IMPORTE_PAGOS  = new BigDecimal(line[QCaptureMeta.numFields+37]);
-			this.CODIGO_MONEDA  = line[QCaptureMeta.numFields+38];
-			this.PAGO_DE_REMESA  = line[QCaptureMeta.numFields+43];
-		}catch (Exception e){
+		// "," has been sent as decimal separator
+		
+		dfs.setDecimalSeparator(COMMONS.DECIMAL_SEPARATOR);		
+		df.setDecimalFormatSymbols(dfs);			
+		try {
+			Simporte = fields[FPL_EM_ORDEN.IDXU_Importe];
+			Nimporte = df.parse(Simporte);
+			this.Importe  = new BigDecimal(Nimporte.toString());			
+			
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		
+		
+		// User requested data
+		this.Moneda=fields[FPL_EM_ORDEN.IDXU_Moneda];
+		this.Banco_Origen=fields[FPL_EM_ORDEN.IDXU_Banco_Origen];
+		this.Localidad_Origen=fields[FPL_EM_ORDEN.IDXU_Localidad_Origen];
+		this.Provincia_Origen=fields[FPL_EM_ORDEN.IDXU_Localidad_Destino];
+		this.Pais_Origen=fields[FPL_EM_ORDEN.IDXU_Pais_Origen];
+		this.Banco_Destino=fields[FPL_EM_ORDEN.IDXU_Pais_Destino];
+		this.Localidad_Destino=fields[FPL_EM_ORDEN.IDXU_Localidad_Destino];
+		this.Provincia_Destino=fields[FPL_EM_ORDEN.IDXU_Provincia_Destino];
+		this.Pais_Destino=fields[FPL_EM_ORDEN.IDXU_Pais_Destino];
 		
 	}
 	@Override
 	public String toString() {
-		return "PL_EM_ORDEN [DATOS_P=" + DATOS_P.toString() + ", DATOS_Q=" + DATOS_Q.toString()
+		return "PL_EM_ORDEN [DATOS_P=" + DATOS_P + ", DATOS_Q=" + DATOS_Q
 				+ ", EMPRESA_ORDENANTE=" + EMPRESA_ORDENANTE
 				+ ", CENTRO_ORDENANTE=" + CENTRO_ORDENANTE + ", ESTADO_PAGO="
 				+ ESTADO_PAGO + ", TIPO_ORDEN=" + TIPO_ORDEN + ", CODIGO_PAIS="
@@ -268,11 +362,13 @@ public class PL_EM_ORDEN implements Serializable {
 				+ USUARIO_ALTA + ", TIMESPTAMP_ALTA=" + TIMESPTAMP_ALTA
 				+ ", USUARIO_MODIFICACION=" + USUARIO_MODIFICACION
 				+ ", TIMESTAMP_MODIFICACION=" + TIMESTAMP_MODIFICACION
-				+ ", IMPORTE_PAGOS=" + IMPORTE_PAGOS + ", CODIGO_MONEDA="
-				+ CODIGO_MONEDA + ", PAGO_DE_REMESA=" + PAGO_DE_REMESA + "]";
-	}	
-
-	
-
-
+				+ ", PAGO_DE_REMESA=" + PAGO_DE_REMESA + ", Importe=" + Importe
+				+ ", Moneda=" + Moneda + ", Banco_Origen=" + Banco_Origen
+				+ ", Localidad_Origen=" + Localidad_Origen
+				+ ", Provincia_Origen=" + Provincia_Origen + ", Pais_Origen="
+				+ Pais_Origen + ", Banco_Destino=" + Banco_Destino
+				+ ", Localidad_Destino=" + Localidad_Destino
+				+ ", Provincia_Destino=" + Provincia_Destino
+				+ ", Pais_Destino=" + Pais_Destino + "]";
+	}
 }

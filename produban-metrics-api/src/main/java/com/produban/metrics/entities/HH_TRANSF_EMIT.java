@@ -2,7 +2,6 @@ package com.produban.metrics.entities;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
@@ -264,7 +263,6 @@ public class HH_TRANSF_EMIT implements Serializable {
 			this.IMPORTE_DIVISA_PAGO = new BigDecimal(Nimporte.toString());			
 			
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -277,7 +275,6 @@ public class HH_TRANSF_EMIT implements Serializable {
 			this.IMPORTE_CONTRAVALOR = new BigDecimal(Nimporte.toString());			
 			
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -290,7 +287,6 @@ public class HH_TRANSF_EMIT implements Serializable {
 			this.IMPORTE_ORDENADO = new BigDecimal(Nimporte.toString());			
 			
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -363,8 +359,7 @@ public class HH_TRANSF_EMIT implements Serializable {
 			this.FECHA_ULTIMA_MODIFICACION= datetimeFormatter1.parse(fecha);
 			
 
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
+		} catch (ParseException e) {		
 			e.printStackTrace();
 		}
 		
