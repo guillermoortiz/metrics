@@ -39,4 +39,5 @@ public class CacheManagerImpl implements CacheManager {
 		cache.setBulkLoad(values);
 
 	}
+		
 }
