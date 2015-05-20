@@ -191,19 +191,32 @@ public class PL_EM_ORDEN implements Serializable {
 		this.DATOS_Q = new QCaptureMeta(line);
 		this.DATOS_P = new ProdubanMeta(produbanLine);
 		
+		Integer offset=0;
 		
-		this.EMPRESA_ORDENANTE = line[QCaptureMeta.numFields+6];
-		this.CENTRO_ORDENANTE = line[QCaptureMeta.numFields+7];
-		this.ESTADO_PAGO = line[QCaptureMeta.numFields+8];
-		this.TIPO_ORDEN = line[QCaptureMeta.numFields+9];
-		this.CODIGO_PAIS  = line[QCaptureMeta.numFields+10]; 
-		this.INDICADOR_RESIDENTE = line[QCaptureMeta.numFields+11];
-		this.MEDIO_FINANCIERO = line[QCaptureMeta.numFields+12];
-		this.INDICADOR_INMEDIATEZ = line[QCaptureMeta.numFields+13];
-		this.CODIGO_EMPRESA_DESTINO = line[QCaptureMeta.numFields+20];
-		this.CODIGO_CENTRO_DESTINO  = line[QCaptureMeta.numFields+21];
-		this.CANAL_OPERACION = line[QCaptureMeta.numFields+22];
-		this.USUARIO_ALTA = line[QCaptureMeta.numFields+25];
+		
+		// Insert events add some irrelevant fields we need to offset
+		if (this.DATOS_Q.getEvento() == QCaptureMeta.tipo_evento.ISRT)
+		{
+			offset = 0;
+		}
+		else
+		{
+			offset = 0;
+		}
+		
+		
+		this.EMPRESA_ORDENANTE = line[QCaptureMeta.numFields+offset+6];
+		this.CENTRO_ORDENANTE = line[QCaptureMeta.numFields+offset+7];
+		this.ESTADO_PAGO = line[QCaptureMeta.numFields+offset+8];
+		this.TIPO_ORDEN = line[QCaptureMeta.numFields+offset+9];
+		this.CODIGO_PAIS  = line[QCaptureMeta.numFields+offset+offset+10]; 
+		this.INDICADOR_RESIDENTE = line[QCaptureMeta.numFields+offset+11];
+		this.MEDIO_FINANCIERO = line[QCaptureMeta.numFields+offset+12];
+		this.INDICADOR_INMEDIATEZ = line[QCaptureMeta.numFields+offset+13];
+		this.CODIGO_EMPRESA_DESTINO = line[QCaptureMeta.numFields+offset+20];
+		this.CODIGO_CENTRO_DESTINO  = line[QCaptureMeta.numFields+offset+21];
+		this.CANAL_OPERACION = line[QCaptureMeta.numFields+offset+22];
+		this.USUARIO_ALTA = line[QCaptureMeta.numFields+offset+25];
 		
 		SimpleDateFormat datetimeFormatter1 = new SimpleDateFormat("yyyy-MM-dd-hh.mm.ss.SSS");
 		Date lFromDate1 = null;
