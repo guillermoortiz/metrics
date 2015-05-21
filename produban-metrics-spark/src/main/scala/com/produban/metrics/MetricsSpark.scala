@@ -29,15 +29,22 @@ object MetricsSpark {
    * Create a Tuple (documentType,json)
    */
   def createObject(message: Array[String], topic: Array[String]): (String,String) = {
-    var documentType: String = ""
-    var json: String = ""
-
-    if (topic(3).equals("PL_EM_ORDEN")) {
-      val messageFiltered = FactoryParser.parser(topic, message)
-      val obj = FactoryCreator.createPL_EM_ORDEN(topic, messageFiltered)
-      documentType = obj.getDATOS_P().getTabla()
-      json = JsonUtil.write(obj)
-    }
+//    var documentType: String = ""
+//    var json: String = ""
+//
+//    if (topic(3).equals("PL_EM_ORDEN")) {
+//      val messageFiltered = FactoryParser.parser(topic, message)
+//      //topico, mensaje, parametrosExtra
+//      val obj = FactoryCreator.createPL_EM_ORDEN(topic, messageFiltered)
+//      documentType = obj.getDATOS_P().getTabla()
+//      json = JsonUtil.write(obj)
+//    }
+//    
+    val extraData = FactoryParser.parser(topic, message)
+    val obj = FactoryCreator.create(topic, message, extraData)
+    val documentType = obj.getDATOS_P().getTabla()
+    val json = JsonUtil.write(obj)
+     
     return (documentType,json)
   }
   
