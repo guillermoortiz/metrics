@@ -6,6 +6,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 import com.produban.metrics.util.FMetrics;
@@ -24,38 +25,24 @@ public class PL_EM_ORDEN implements Metrics, FMetrics {
 	private QCaptureMeta DATOS_Q;
 		
 	// Table relevant data
-	//   E5604_IDEMPORD, index 6 + DATOS_Q.numFields; (12)	
-	private String EMPRESA_ORDENANTE;
-	//   E5604_IDCENORD index 7 + DATOS_Q.numFields; (12)
-	private String CENTRO_ORDENANTE;
-	//   E5604_CESTADO, CODIGO index 8 + DATOS_Q.numFields; (12) 
-	private String ESTADO_PAGO;
-	//   E5604_TORDEN (SIP,SO,FWD,RETURN) index 9 + DATOS_Q.numFields; (12)
-	private String TIPO_ORDEN; 
-	//   E5604_CODPAIS index 10 + DATOS_Q.numFields; (12)
-	private String CODIGO_PAIS;
-	//   E5604_INDRES index 11 + DATOS_Q.numFields; (12)
-	private String INDICADOR_RESIDENTE;   
-	//   E5604_MEDIO index 12 + DATOS_Q.numFields; (12)
-	private String MEDIO_FINANCIERO;
-	//   E5604_IDINMEDI index 13 + DATOS_Q.numFields; (12)
-	private String INDICADOR_INMEDIATEZ;            
-	//   E5604_IDEMPRD index 20 + DATOS_Q.numFields; (12)
-	private String CODIGO_EMPRESA_DESTINO;
-	//   E5604_IDCENTD index 21 + DATOS_Q.numFields; (12)
-	private String CODIGO_CENTRO_DESTINO;
-	//   E5604_CANALOPE index 22 + DATOS_Q.numFields; (12)            
-	private String CANAL_OPERACION;            
-	//   E5604_USUALT index 25 + DATOS_Q.numFields; (12)
-	private String USUARIO_ALTA;    
-	//   E5604_TIMALTA index 26 + DATOS_Q.numFields; (12)
-	private Timestamp TIMESPTAMP_ALTA;
-	//   E5604_USUMOD index 27 + DATOS_Q.numFields; (12)
-	private String USUARIO_MODIFICACION;
-	//   E5604_TIMESMOD index 28 + DATOS_Q.numFields; (12)
-	private Timestamp TIMESTAMP_MODIFICACION;            
-	//   E5604_IMPPAG00 index 37 + DATOS_Q.numFields; (12)
-	private String PAGO_DE_REMESA;
+	private String CODIGO_EMPRESA;   //E5604_IDEMPR    
+	private String CODIGO_CENTRO;	  //E5604_IDCENT
+	private String EMPRESA_ORDENANTE; //   E5604_IDEMPORD, index 6 + DATOS_Q.numFields; (12)
+	private String CENTRO_ORDENANTE; //   E5604_IDCENORD index 7 + DATOS_Q.numFields; (12)
+	private String ESTADO_PAGO; 	//   E5604_CESTADO, CODIGO index 8 + DATOS_Q.numFields; (12)
+	private String TIPO_ORDEN; 	//   E5604_TORDEN (SIP,SO,FWD,RETURN) index 9 + DATOS_Q.numFields; (12) 
+	private String CODIGO_PAIS; 	//   E5604_CODPAIS index 10 + DATOS_Q.numFields; (12)
+	private String INDICADOR_RESIDENTE; //   E5604_INDRES index 11 + DATOS_Q.numFields; (12)   
+	private String MEDIO_FINANCIERO;  //   E5604_MEDIO index 12 + DATOS_Q.numFields; (12)
+	private String INDICADOR_INMEDIATEZ; //   E5604_IDINMEDI index 13 + DATOS_Q.numFields; (12)            
+	private String CODIGO_EMPRESA_DESTINO; //   E5604_IDEMPRD index 20 + DATOS_Q.numFields; (12)
+	private String CODIGO_CENTRO_DESTINO;  //   E5604_IDCENTD index 21 + DATOS_Q.numFields; (12)
+	private String CANAL_OPERACION; //   E5604_CANALOPE index 22 + DATOS_Q.numFields; (12)            
+	private String USUARIO_ALTA; 	//   E5604_USUALT index 25 + DATOS_Q.numFields; (12)    
+	private Timestamp TIMESPTAMP_ALTA; 	//   E5604_TIMALTA index 26 + DATOS_Q.numFields; (12)
+	private String USUARIO_MODIFICACION; 	//   E5604_USUMOD index 27 + DATOS_Q.numFields; (12)
+	private Timestamp TIMESTAMP_MODIFICACION;  //   E5604_TIMESMOD index 28 + DATOS_Q.numFields; (12)
+	private String PAGO_DE_REMESA; 	//   E5604_IMPPAG00 index 37 + DATOS_Q.numFields; (12)
 	
 	// User requested data
 	private BigDecimal Importe;
@@ -64,16 +51,30 @@ public class PL_EM_ORDEN implements Metrics, FMetrics {
 	private String Localidad_Origen;
 	private String Provincia_Origen;
 	private String Pais_Origen;
-	private String Banco_Destino;
-	private String Localidad_Destino;
-	private String Provincia_Destino;
-	private String Pais_Destino;
+	private String[] Banco_Destino;
+	private String[] Localidad_Destino;
+	private String[] Provincia_Destino;
+	private String[] Pais_Destino;
 
+	// getters and setters
 	public QCaptureMeta getDATOS_Q() {
 		return DATOS_Q;
 	}
 	public void setDATOS_Q(QCaptureMeta dATOS_Q) {
-		DATOS_Q = dATOS_Q;
+		DATOS_Q = dATOS_Q;		
+	}
+	
+	public String getCODIGO_EMPRESA() {
+		return CODIGO_EMPRESA;
+	}
+	public void setCODIGO_EMPRESA(String cODIGO_EMPRESA) {
+		CODIGO_EMPRESA = cODIGO_EMPRESA;
+	}
+	public String getCODIGO_CENTRO() {
+		return CODIGO_CENTRO;
+	}
+	public void setCODIGO_CENTRO(String cODIGO_CENTRO) {
+		CODIGO_CENTRO = cODIGO_CENTRO;
 	}
 	public String getEMPRESA_ORDENANTE() {
 		return EMPRESA_ORDENANTE;
@@ -220,57 +221,53 @@ public class PL_EM_ORDEN implements Metrics, FMetrics {
 	public void setPais_Origen(String pais_Origen) {
 		Pais_Origen = pais_Origen;
 	}
-	public String getBanco_Destino() {
+		
+	public String[] getBanco_Destino() {
 		return Banco_Destino;
 	}
-	public void setBanco_Destino(String banco_Destino) {
+	public void setBanco_Destino(String[] banco_Destino) {
 		Banco_Destino = banco_Destino;
 	}
-	public String getLocalidad_Destino() {
+	public String[] getLocalidad_Destino() {
 		return Localidad_Destino;
 	}
-	public void setLocalidad_Destino(String localidad_Destino) {
+	public void setLocalidad_Destino(String[] localidad_Destino) {
 		Localidad_Destino = localidad_Destino;
 	}
-	public String getProvincia_Destino() {
+	public String[] getProvincia_Destino() {
 		return Provincia_Destino;
 	}
-	public void setProvincia_Destino(String provincia_Destino) {
+	public void setProvincia_Destino(String[] provincia_Destino) {
 		Provincia_Destino = provincia_Destino;
 	}
-	public String getPais_Destino() {
+	public String[] getPais_Destino() {
 		return Pais_Destino;
 	}
-	public void setPais_Destino(String pais_Destino) {
+	public void setPais_Destino(String[] pais_Destino) {
 		Pais_Destino = pais_Destino;
 	}
-
-
+	// Constructor
 	public PL_EM_ORDEN(String[] produbanLine, String[] line, String[] fields) {
 		
-		// Local variables
+		// Q-Capture metadata
+		this.DATOS_Q = new QCaptureMeta(line);
 		
+		// Produban metadata
+		this.DATOS_P = new ProdubanMeta(produbanLine);
+		// Put table name from constants
+		this.DATOS_P.setTabla(COMMONS.NPL_EM_ORDEN);
+		
+		// Table data
 		// For money conversions
 		DecimalFormat df = new DecimalFormat();
 		DecimalFormatSymbols dfs = new DecimalFormatSymbols();
 		String Simporte="";
 		Number Nimporte;
-		
-		// Offset to add in case off ISRT that adds a series of "|" at the begining
-		Integer offset=0;
-		
 		// For Gregorian date formatting
 		SimpleDateFormat datetimeFormatter1 = new SimpleDateFormat(COMMONS.DATE_FORMAT);
 		Date lFromDate1 = null;
-		
-		// Data relevant to Q-Capture
-		this.DATOS_Q = new QCaptureMeta(line);
-		
-		// Data relevant to Produban (Entidad, Sistema, Celda, Tabla) 
-		this.DATOS_P = new ProdubanMeta(produbanLine);
-		
-		this.DATOS_P.setTabla(COMMONS.NPL_EM_ORDEN);
-				
+		// Offset to add in case off ISRT that adds a series of "|" at the begining
+		Integer offset=0;
 		// Insert events add some irrelevant fields we need to offset
 		if (this.DATOS_Q.getEvento() == QCaptureMeta.tipo_evento.ISRT)
 		{
@@ -282,6 +279,8 @@ public class PL_EM_ORDEN implements Metrics, FMetrics {
 		}
 		
 		// Table relevant data
+		this.CODIGO_EMPRESA = line[FQCaptureMeta.OFFSET_numFields+offset+FPL_EM_ORDEN.IDXT_CODIGO_EMPRESA];
+		this.CODIGO_CENTRO = line[FQCaptureMeta.OFFSET_numFields+offset+FPL_EM_ORDEN.IDXT_CODIGO_CENTRO];
 		this.EMPRESA_ORDENANTE = line[FQCaptureMeta.OFFSET_numFields+offset+FPL_EM_ORDEN.IDXT_EMPRESA_ORDENANTE];
 		this.CENTRO_ORDENANTE = line[FQCaptureMeta.OFFSET_numFields+offset+FPL_EM_ORDEN.IDXT_CENTRO_ORDENANTE];
 		this.ESTADO_PAGO = line[FQCaptureMeta.OFFSET_numFields+offset+FPL_EM_ORDEN.IDXT_ESTADO_PAGO];
@@ -294,46 +293,37 @@ public class PL_EM_ORDEN implements Metrics, FMetrics {
 		this.CODIGO_CENTRO_DESTINO  = line[FQCaptureMeta.OFFSET_numFields+offset+FPL_EM_ORDEN.IDXT_CANAL_OPERACION];
 		this.CANAL_OPERACION = line[FQCaptureMeta.OFFSET_numFields+offset+FPL_EM_ORDEN.IDXT_CANAL_OPERACION];
 		this.USUARIO_ALTA = line[FQCaptureMeta.OFFSET_numFields+offset+FPL_EM_ORDEN.IDXT_USUARIO_ALTA];
-		
-		
 		try {
 			String fecha;
 			fecha = line[FQCaptureMeta.OFFSET_numFields+FPL_EM_ORDEN.IDXT_TIMESPTAMP_ALTA].substring(0, 23);
 			lFromDate1 = datetimeFormatter1.parse(fecha);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (ParseException e) {
 			e.printStackTrace();
 		}
-
 		this.TIMESPTAMP_ALTA = new Timestamp(lFromDate1.getTime());		
 		this.USUARIO_MODIFICACION = line[FQCaptureMeta.OFFSET_numFields+FPL_EM_ORDEN.IDXT_USUARIO_ALTA];
-		
 		try {
 			String fecha;
 			fecha = line[FQCaptureMeta.OFFSET_numFields+FPL_EM_ORDEN.IDXT_TIMESTAMP_MODIFICACION].substring(0, 23);
 			lFromDate1 = datetimeFormatter1.parse(fecha);
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (ParseException e) {
 			e.printStackTrace();
 		}		
 		this.TIMESTAMP_MODIFICACION  = new Timestamp(lFromDate1.getTime());
-
 		this.PAGO_DE_REMESA  = line[FQCaptureMeta.OFFSET_numFields+FPL_EM_ORDEN.IDXT_PAGO_DE_REMESA];
-		
-		// "," has been sent as decimal separator
-		
+		// "," has been sent as decimal separator, read from constants
 		dfs.setDecimalSeparator(COMMONS.DECIMAL_SEPARATOR);		
 		df.setDecimalFormatSymbols(dfs);			
 		try {
 			Simporte = fields[FPL_EM_ORDEN.IDXU_Importe];
 			Nimporte = df.parse(Simporte);
 			this.Importe  = new BigDecimal(Nimporte.toString());			
-			
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (ParseException e) {			
 			e.printStackTrace();
 		}
-		
 		
 		// User requested data
 		this.Moneda=fields[FPL_EM_ORDEN.IDXU_Moneda];
@@ -341,11 +331,30 @@ public class PL_EM_ORDEN implements Metrics, FMetrics {
 		this.Localidad_Origen=fields[FPL_EM_ORDEN.IDXU_Localidad_Origen];
 		this.Provincia_Origen=fields[FPL_EM_ORDEN.IDXU_Localidad_Destino];
 		this.Pais_Origen=fields[FPL_EM_ORDEN.IDXU_Pais_Origen];
-		this.Banco_Destino=fields[FPL_EM_ORDEN.IDXU_Pais_Destino];
-		this.Localidad_Destino=fields[FPL_EM_ORDEN.IDXU_Localidad_Destino];
-		this.Provincia_Destino=fields[FPL_EM_ORDEN.IDXU_Provincia_Destino];
-		this.Pais_Destino=fields[FPL_EM_ORDEN.IDXU_Pais_Destino];
 		
+		int fLen = fields.length;
+		int fItera = 0;
+		int nElements = 0;
+		
+		// Calculate number of elements for the array		
+		nElements = (fLen - FPL_EM_ORDEN.IDXU_Pais_Destino) / FPL_EM_ORDEN.INC_UserData;
+		
+		this.Banco_Destino = new String[nElements];
+		this.Localidad_Destino = new String[nElements];
+		this.Provincia_Destino = new String[nElements];
+		this.Pais_Destino = new String[nElements];
+		
+		
+		// Last four fields will be arrays, to populate them iterate the last field items in blocks of four to fulfill the elements
+		for (fItera = FPL_EM_ORDEN.IDXU_Pais_Destino; fItera <= fLen; fItera++)
+		{
+			this.Banco_Destino[fItera] = fields[FPL_EM_ORDEN.IDXU_Pais_Destino+fItera * FPL_EM_ORDEN.INC_UserData+FPL_EM_ORDEN.IDXITERA_Banco_Destino];
+			this.Localidad_Destino[fItera] = fields[FPL_EM_ORDEN.IDXU_Pais_Destino+fItera * FPL_EM_ORDEN.INC_UserData+FPL_EM_ORDEN.IDXITERA_Localidad_Destino];
+			this.Provincia_Destino[fItera] = fields[FPL_EM_ORDEN.IDXU_Pais_Destino+fItera * FPL_EM_ORDEN.INC_UserData+FPL_EM_ORDEN.IDXITERA_Provincia_Destino];
+			this.Pais_Destino[fItera] = fields[FPL_EM_ORDEN.IDXU_Pais_Destino+fItera * FPL_EM_ORDEN.INC_UserData+FPL_EM_ORDEN.IDXITERA_Pais_Destino];
+			
+		}
+				
 	}
 	@Override
 	public String toString() {
@@ -366,9 +375,13 @@ public class PL_EM_ORDEN implements Metrics, FMetrics {
 				+ ", Moneda=" + Moneda + ", Banco_Origen=" + Banco_Origen
 				+ ", Localidad_Origen=" + Localidad_Origen
 				+ ", Provincia_Origen=" + Provincia_Origen + ", Pais_Origen="
-				+ Pais_Origen + ", Banco_Destino=" + Banco_Destino
-				+ ", Localidad_Destino=" + Localidad_Destino
-				+ ", Provincia_Destino=" + Provincia_Destino
-				+ ", Pais_Destino=" + Pais_Destino + "]";
+				+ Pais_Origen + ", Banco_Destino="
+				+ Arrays.toString(Banco_Destino) + ", Localidad_Destino="
+				+ Arrays.toString(Localidad_Destino) + ", Provincia_Destino="
+				+ Arrays.toString(Provincia_Destino) + ", Pais_Destino="
+				+ Arrays.toString(Pais_Destino) + "]";
 	}
+	
+	
+
 }

@@ -82,11 +82,11 @@ public class FilterMetrics implements KMetrics {
 				&& splitLine[KMetrics.HH_DATOS_BANCOS.INDEX_CHECK_B].equals(B);
 	}
 
-	private static boolean filterHhTransfEmit(String[] splitLine) {
+	private static boolean filterHhTransfEmit(String[] splitLine) {		
 		return splitLine[INDEX_CHECK_TYPE_ORDEN]
 				.equals(KMetrics.HH_TRANSF_EMIT.HH_TRANSF_EMIT)
 				&& splitLine[INDEX_CHECK_TYPE_OP].equals(ISRT)
-				&& splitLine[KMetrics.HH_TRANSF_EMIT.INDEX_CONS1].equals(IND);
+				&& splitLine[KMetrics.HH_TRANSF_EMIT.INDEX_CONS1].trim().equals(IND);
 	}
 
 	private static boolean filterPlEmOrden(String[] splitLine) {

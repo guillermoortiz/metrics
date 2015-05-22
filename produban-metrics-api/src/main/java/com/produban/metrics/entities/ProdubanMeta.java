@@ -2,7 +2,9 @@ package com.produban.metrics.entities;
 
 import java.io.Serializable;
 
-public class ProdubanMeta implements Serializable {
+import com.produban.metrics.util.FMetrics;
+
+public class ProdubanMeta implements Serializable, FMetrics {
 
 	/**
 	 * 
@@ -41,10 +43,11 @@ public class ProdubanMeta implements Serializable {
 	
 	public ProdubanMeta(String[] produbanLine) {
 
-		this.Entidad = produbanLine[0];
-		this.Sistema = produbanLine[1];
-		this.Celda = produbanLine[2];
-		this.Tabla = produbanLine[3];
+		// Produban metadata
+		this.Entidad = produbanLine[FProdubanMeta.IDXT_Entidad];
+		this.Sistema = produbanLine[FProdubanMeta.IDXT_Sistema];
+		this.Celda = produbanLine[FProdubanMeta.IDXT_Celda];
+		this.Tabla = produbanLine[FProdubanMeta.IDXT_Tabla];
 	}
 	@Override
 	public String toString() {

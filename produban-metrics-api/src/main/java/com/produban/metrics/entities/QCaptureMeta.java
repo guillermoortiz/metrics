@@ -6,6 +6,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import com.produban.metrics.util.FMetrics.FQCaptureMeta;
+
 public class QCaptureMeta implements Serializable {
 	
 	/**
@@ -58,8 +60,8 @@ public class QCaptureMeta implements Serializable {
 	public QCaptureMeta(String[] line) {
 
 		
-		String dateStr = line[2];
-		String hourStr = line[3];
+		String dateStr = line[FQCaptureMeta.IDXT_datestr];
+		String hourStr = line[FQCaptureMeta.IDXT_hourstr];
 		
 		Calendar cal  = new GregorianCalendar();
 		
@@ -83,8 +85,8 @@ public class QCaptureMeta implements Serializable {
 		
 		this.fecha_hora = cal.getTime();
 				
-		this.owner = line[4];
-		this.tabla = line[5];
+		this.owner = line[FQCaptureMeta.IDXT_owner];
+		this.tabla = line[FQCaptureMeta.IDXT_tabla];
 		switch (line[6].toUpperCase()){
 		case "ISRT":
 			this.evento = QCaptureMeta.tipo_evento.ISRT;
@@ -100,7 +102,7 @@ public class QCaptureMeta implements Serializable {
 			break;
 		}
 		
-		this.plan = line[10];
+		this.plan = line[FQCaptureMeta.IDXT_plan];
 
 	}
 	@Override
