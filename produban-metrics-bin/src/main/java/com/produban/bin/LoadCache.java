@@ -14,8 +14,11 @@ import org.apache.log4j.Logger;
 import com.produban.api.general.Factory;
 import com.produban.api.general.K;
 import com.produban.api.manager.CacheManager;
+import com.produban.metrics.entities.Metrics;
+import com.produban.metrics.util.FactoryCreator;
 import com.produban.metrics.util.FactoryParser;
 import com.produban.util.HDFSUtils;
+import com.produban.util.JsonUtil;
 
 public class LoadCache {
 	private static final Logger LOG = Logger.getLogger(LoadCache.class);
@@ -209,10 +212,7 @@ public class LoadCache {
 	}
 
 	public static void main(String[] args) throws IOException {
-		String line = "10|\"IBM\"|\"2015127\"|\"133513677236\"|\"ORG0T\"|\"OB_DGO_CONTAB_2\"|\"ISRT\"|\"0000:01f7:e712:9b38:0000\"|\"0000:01f7:e713:1554:0000\"|\"2015-05-07-11.35.13\"|\"B40CO \"|0000|||||||||||||||||||||||||||||\"0073\"|\"1602\"|\"AE992\"|2|\"014\"|\" \"|\"B4\"|\"049\"|\"001\"|\"NR\"|\"NR\"|10,2|\"EUR\"|\"2015-05-07\"|\"OB002801\"|\"0073\"|\"0100\"|\"616\"|\"1084008\"|\"001\"|\"0073\"|\"0100\"|\"0073\"|\"1602\"|\"@PCASPAS\"|\"2015-05-07-13.35.12.512193\"|\" \"|\"<atributos del DGO>\"";
-		String[] split = line.split("\\|");
-		System.out.println("a");
-		
+
 		LoadCache loadCache = new LoadCache();
 		CacheManager cacheManager = Factory.getCacheManager();
 
@@ -223,6 +223,6 @@ public class LoadCache {
 			LOG.info("Table name:" + table + " number records:"
 					+ filterLines.size());
 			cacheManager.setBulkLoad(filterLines);
-		}
+		}		
 	}
 }
