@@ -18,10 +18,11 @@ import com.produban.api.general.Factory
 import com.produban.api.manager.CacheManager
 import com.produban.cache.redis.RedisCache
 import com.produban.metrics.util.FactoryParser
-import com.produban.indexer.elastic.ElasticIndexer
 import com.produban.metrics.util.FactoryCreator
+import com.produban.indexer.elastic.ElasticIndexer
 import scala.collection.JavaConverters
 import org.apache.commons.math3.util.Pair
+import com.produban.metrics.util.FilterMetrics
 
 object MetricsSpark {
 
@@ -29,24 +30,18 @@ object MetricsSpark {
    * Create a Tuple (documentType,json)
    */
   def createObject(message: Array[String], topic: Array[String]): (String,String) = {
-//    var documentType: String = ""
-//    var json: String = ""
-//
-//    if (topic(3).equals("PL_EM_ORDEN")) {
-//      val messageFiltered = FactoryParser.parser(topic, message)
-//      //topico, mensaje, parametrosExtra
-//      val obj = FactoryCreator.createPL_EM_ORDEN(topic, messageFiltered)
-//      documentType = obj.getDATOS_P().getTabla()
-//      json = JsonUtil.write(obj)
-//    }
-//    
     val extraData = FactoryParser.parser(topic, message)
-    val obj = FactoryCreator.create(topic, message, extraData)
-    val documentType = obj.getDATOS_P().getTabla()
-    val json = JsonUtil.write(obj)
-     
+    val metrics = FactoryCreator.createMetric(topic, message, extraData)
+    val documentType = metrics.getDATOS_P().getTabla()
+    val json = JsonUtil.write(metrics)
+    println("1**********************************");
+    println(json);
+    println("XXXX**********************************");
+    
     return (documentType,json)
   }
+  
+  
   
   def main(args: Array[String]) {
     if (args.length != 2){
@@ -57,7 +52,7 @@ object MetricsSpark {
     }
     
        
-    val sparkConf = new SparkConf().setMaster("local[2]").setAppName("app")
+    val sparkConf = new SparkConf().setMaster("local[2]").setAppName("app")    
     //val sparkConf = new SparkConf()
     val ssc = new StreamingContext(sparkConf, Seconds(5))
     
@@ -65,7 +60,7 @@ object MetricsSpark {
     //val kafkaParams = Map[String, String]("metadata.broker.list" -> kafkaHosts)
     val kafkaParams = Map[String, String]("metadata.broker.list" -> args(0))
     val topics = args(1).split("\\,")
-    //val topics = Set("OB.MATRIX.HOST.PL_EM_ORDEN") //, "internalOpManager", "presOpManager")
+    //val topics = Set("OB.MATRIX.HOST.ULTALTA") //, "internalOpManager", "presOpManager")
     val directKafkaStream = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, topics.toSet)
 
     directKafkaStream.foreachRDD { rdd =>
@@ -76,11 +71,18 @@ object MetricsSpark {
         val osr: OffsetRange = offsets(i)
         val topic = osr.topic
         val splitTopic = topic.split("\\.")
-
-        //generate tuples(documentType,jsonMessage) for each message got from Kafka
-        kafkaEvent.map { event =>
-          val splitMessage = event._2.split("\\|")
-          createObject(splitMessage, splitTopic)
+        
+         //generate tuples(documentType,jsonMessage) for each message got from Kafka        
+        val messageClean = kafkaEvent.map { event =>
+          val eventCleaned = event._2.replace("\"", "")
+          eventCleaned.split("\\|")
+        }
+        //Check the mandatories fields for each topic.
+        val messagesFiltered = messageClean.filter( event => FilterMetrics.filter(splitTopic(3), event))
+        
+        //generate tuples(documentType,jsonMessage) for each message got from Kafka        
+        messagesFiltered.map { event =>                    
+          createObject(event, splitTopic)
         }
       }
 
