@@ -1,5 +1,8 @@
 package com.produban.metrics.util;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.StringUtils;
 
@@ -15,6 +18,7 @@ import com.produban.api.manager.CacheManager;
  */
 public class FactoryParser implements KMetrics {
 
+	
 	// Singleton where query the final values
 	public static CacheManager cache = Factory.getCacheManager();
 
@@ -36,6 +40,14 @@ public class FactoryParser implements KMetrics {
 			parseLine = parseObDgoContab(line);
 			break;
 
+		case HH_DATOS_BANCOS.HH_DATOS_BANCOS:
+			parseLine = parseHhDatosBancos(line);
+			break;
+
+		case HH_TRANSF_EMIT.HH_TRANSF_EMIT:
+			parseLine = parseHhTransfEmit(line);
+			break;
+
 		default:
 			parseLine = new String[0];
 			break;
@@ -48,17 +60,13 @@ public class FactoryParser implements KMetrics {
 	// Origen=ALCOBENDAS,Provincia Origen=MADRID,País Origen=ESPAÑA,Banco
 	// Destino=BANQUE NATIONALE DE PARIS,Localidad Destino=BEOGRAD,Provincia
 	// destino=,País destino=SERBIA
-	public static String[] parsePlEmOrden(String[] line) {
+	private static String[] parsePlEmOrden(String[] line) {
 		String[] extraParameters = new String[PLEMORDEN.EXTRA_PARAMS];
 
-		String codBancoOrigen = line[PLEMORDEN.INDEX_BANCO_ORIGEN].replace(
-				"\"", "");
-		String codBancoDestino = line[PLEMORDEN.INDEX_BANCO_DESTINO].replace(
-				"\"", "");
-		String codSucursalOrigen = line[PLEMORDEN.INDEX_SUCURSAL_ORIGEN]
-				.replace("\"", "");
-		String codSucursalDestino = line[PLEMORDEN.INDEX_SUCURSAL_DESTINO]
-				.replace("\"", "");
+		String codBancoOrigen = line[PLEMORDEN.INDEX_BANCO_ORIGEN];
+		String codBancoDestino = line[PLEMORDEN.INDEX_BANCO_DESTINO];
+		String codSucursalOrigen = line[PLEMORDEN.INDEX_SUCURSAL_ORIGEN];
+		String codSucursalDestino = line[PLEMORDEN.INDEX_SUCURSAL_DESTINO];
 
 		String bancoOrigen = cache.get(codBancoOrigen,
 				K.CACHE.TABLE_ENTIDAD_CREDITO_ID);
@@ -70,9 +78,9 @@ public class FactoryParser implements KMetrics {
 				K.CACHE.TABLE_PROVINCIA_ID);
 		String paisOrigen = cache.get(recordOficina[2], K.CACHE.TABLE_PAIS_ID);
 
-		String paisDestino;
-		String provinciaDestino = new String();
+		String paisDestino;		
 		String localidadDestino;
+		String provinciaDestino = new String();
 
 		String codBancoSucursal = codBancoDestino + codSucursalDestino;
 		String bancoDestino = cache.get(codBancoDestino,
@@ -111,17 +119,17 @@ public class FactoryParser implements KMetrics {
 
 	// Codigo Empresa=0049,Codigo sucursal=0015,Nombre sucursal=ALCOBENDAS
 	// URBANA CONSTITUCION,Código producto=211,Producto=CREDITOS GENERALES
-	public static String[] parseUltalta(final String[] line) {
+	private static String[] parseUltalta(final String[] line) {
 		String[] extraParameters = new String[ULTALTA.EXTRA_PARAMS];
-		String codEmpresa = line[ULTALTA.INDEX_COD_EMPRESA].replace("\"", "");
-		String codSucursal = line[ULTALTA.INDEX_COD_SUCURSAL].replace("\"", "");
-		String codProducto = line[ULTALTA.INDEX_COD_PRODUCTO].replace("\"", "");
+		String codEmpresa = line[ULTALTA.INDEX_COD_EMPRESA];
+		String codSucursal = line[ULTALTA.INDEX_COD_SUCURSAL];
+		String codProducto = line[ULTALTA.INDEX_COD_PRODUCTO];
 
-		extraParameters[0] = line[ULTALTA.INDEX_COD_EMPRESA].replace("\"", "");
-		extraParameters[1] = line[ULTALTA.INDEX_COD_SUCURSAL].replace("\"", "");
+		extraParameters[0] = line[ULTALTA.INDEX_COD_EMPRESA];
+		extraParameters[1] = line[ULTALTA.INDEX_COD_SUCURSAL];
 		extraParameters[2] = cache.get(codEmpresa + codSucursal,
 				K.CACHE.TABLE_CENTRO_ID);
-		extraParameters[3] = line[ULTALTA.INDEX_COD_PRODUCTO].replace("\"", "");
+		extraParameters[3] = line[ULTALTA.INDEX_COD_PRODUCTO];
 		extraParameters[4] = cache.get(codEmpresa + codProducto,
 				K.CACHE.TABLE_EMPRESA_PRODUCT_ID);
 
@@ -129,10 +137,8 @@ public class FactoryParser implements KMetrics {
 	}
 
 	private static String[] parseObDgoContab(String[] line) {
-		boolean tpv = line[5].contains(OBDGOCONTAB.CONS1_TPV)
-				&& line[6].equals(OBDGOCONTAB.CONS2_TPV)
-				&& line[47].equals(OBDGOCONTAB.CONS3_TPV)
-				&& line[48].equals(OBDGOCONTAB.CONS4_TPV);
+		boolean tpv = line[OBDGOCONTAB.INDEX_CONS1]
+				.contains(OBDGOCONTAB.CONS1_TPV);
 
 		String[] extraParam;
 		if (tpv) {
@@ -145,16 +151,15 @@ public class FactoryParser implements KMetrics {
 
 	// Importe=10,91,Moneda=EUR,TPV=0000304100,Comercio=ARROCERIA
 	// BALEAR,Localidad=ALCOBENDAS,Provincia=MADRID,Pais=ESPAÑA
-	public static String[] parseObDgoContabTPV(final String line[]) {
+	private static String[] parseObDgoContabTPV(final String line[]) {
 		String[] extraParameters = new String[OBDGOCONTAB_TPV.EXTRA_PARAMS];
-		String importe = line[OBDGOCONTAB_TPV.INDEX_IMPORTE].replace("\"", "");
-		String moneda = line[OBDGOCONTAB_TPV.INDEX_MONEDA].replace("\"", "");
-		String dgoParam = line[OBDGOCONTAB_TPV.INDEX_DGO_PARAMS].replace("\"",
-				"");
+		String importe = line[OBDGOCONTAB_TPV.INDEX_IMPORTE];
+		String moneda = line[OBDGOCONTAB_TPV.INDEX_MONEDA];
+		String dgoParam = line[OBDGOCONTAB_TPV.INDEX_DGO_PARAMS];
 		String tpv = StringUtils.substring(dgoParam, 260, 270);
 		String comercio = StringUtils.substring(dgoParam, 270, 295);
 		String codLocalidad = String.valueOf(Integer.parseInt(
-				StringUtils.substring(dgoParam, 295, 308), 16)); 
+				StringUtils.substring(dgoParam, 295, 308), 16));
 
 		String localidad = cache.get(codLocalidad, K.CACHE.TABLE_PLAZA_ID);
 		String[] recordProvincia = cache.get(codLocalidad,
@@ -175,14 +180,11 @@ public class FactoryParser implements KMetrics {
 	}
 
 	// Importe=10,91,Moneda=EUR,Localidad=ALCOBENDAS,Provincia=MADRID,Pais=ESPAÑA
-	public static String[] parseObDgoContabEfectivo(final String line[]) {
+	private static String[] parseObDgoContabEfectivo(final String line[]) {
 		String[] extraParameters = new String[OBDGOCONTAB_EFECTIVO.EXTRA_PARAMS];
-		String importe = line[OBDGOCONTAB_EFECTIVO.INDEX_IMPORTE].replace("\"",
-				"");
-		String moneda = line[OBDGOCONTAB_EFECTIVO.INDEX_MONEDA].replace("\"",
-				"");
-		String dgoParam = line[OBDGOCONTAB_EFECTIVO.INDEX_DGO_PARAMS].replace(
-				"\"", "");
+		String importe = line[OBDGOCONTAB_EFECTIVO.INDEX_IMPORTE];
+		String moneda = line[OBDGOCONTAB_EFECTIVO.INDEX_MONEDA];
+		String dgoParam = line[OBDGOCONTAB_EFECTIVO.INDEX_DGO_PARAMS];
 		String banco = StringUtils.substring(dgoParam, 763, 793);
 		String localidad = StringUtils.substring(dgoParam, 793, 808);
 
@@ -202,18 +204,64 @@ public class FactoryParser implements KMetrics {
 
 	}
 
-	public static void main(String[] args) {
+	// Importe=11,00,Moneda=GBP,Banco origen=BANCO SANTANDER SA,Localidad
+	// origen=ALCOBENDAS,Provincia origen=MADRID,País origen=ESPAÑA,Banco
+	// destino=BANQUE NATIONALE DE PARIS,Localidad desttino=BEOGRAD,Provincia
+	// destino=,País destino=SERBIA
+	private static String[] parseHhTransfEmit(final String line[]) {
+		List<String> extraParameters = new ArrayList<String>();
+
+		String importe = line[HH_TRANSF_EMIT.INDEX_IMPORTE];
+		String moneda = line[HH_TRANSF_EMIT.INDEX_MONEDA];
+		String codBancoOrigen = line[HH_TRANSF_EMIT.INDEX_BANCO_ORIGEN];
+		String codSucursalOrigen = line[HH_TRANSF_EMIT.INDEX_SUCURSAL_ORIGEN];
+
+		String bancoOrigen = cache.get(codBancoOrigen,
+				K.CACHE.TABLE_ENTIDAD_CREDITO_ID);
+		String codProvinciaOrigen = codBancoOrigen + codSucursalOrigen;
+		String[] recordOficina = cache.get(codProvinciaOrigen,
+				K.CACHE.TABLE_OFICI_BANCARIA_ID).split("\\|");
+		String localidadOrigen = recordOficina[0];
+		String provinciaOrigen = cache.get(recordOficina[1],
+				K.CACHE.TABLE_PROVINCIA_ID);
+		String paisOrigen = cache.get(recordOficina[2], K.CACHE.TABLE_PAIS_ID);
+
+		extraParameters.add(importe);
+		extraParameters.add(moneda);
+		extraParameters.add(bancoOrigen);
+		extraParameters.add(localidadOrigen);
+		extraParameters.add(provinciaOrigen);
+		extraParameters.add(paisOrigen);
+
+		return extraParameters.toArray(new String[extraParameters.size()]);
 
 	}
 
-	// String line =
-	// "10|\"IBM\"|\"2015113\"|\"171646002851\"|\"ORN01\"|\"PL_EM_ORDEN\"|“ISRT\"|\"0000:1d8b:5f00:cad7:0002\"|\"0000:ced4:c014:705f:0001\"|\"2015-04-21-13.06.55\"|\"PLBALQDI\"|0000|\"0049\"|\"0015\"|\"754\"|\"QBBBBKC\"|\"001\"|\"0049\"|\"0001\"|\"PTD\"| \"0009\"|\"ES\"|\"S\"|\"CCC\"|\"INM\"|\"001\"|\"2015-04-10\"|\"0001-01-01\"|\"2015-04-13\"|\"2015-04-13\"|\"2015-04-13\"|\"BNPA\"|“BE01\"|\"RED\"|\" \"|\" \"|\"PLBALE1 \"|\"2015-04-10-09.31.04.455131\"|\"PLCHDV1 \"|\"2015-04-20-18.46.03.028611\"|\"2015-04-13\"|\"2015-04-10\"|\"SEPA\"|\"RCUR\"|\" \"|\"CORE\"|\"003\"|\"27 \"|188,09|\"EUR\"|\" \"|\"N\"|\"OAP\"|\"PMS\"|\" \"|\" \"|\" \"|\" \"|\" \"|\" \"|\" \"|\" \"|\" \"|\"0049\"|\"0015\"|\"754\"|\"QBBBBKC\"|\"001\"|\"0049\"|\"0001\"|\"DEV\"|\"D008\"|\"ES\"|\"S\"|\"CCC\"|\"INM\"|\"001\"|\"2015-04-10\"|\"0001-01-01\"|\"2015-04-13\"|\"2015-04-13\"|\"2015-04-13\"|\"0049\"|\"0015\"|\"RED\"|\" \"|\" \"|\"PLBALE1 \"|\"2015-04-10-09.31.04.455131\"|\"PLBALQD \"|\"2015-04-21-15.06.54.772523\"|\"2015-04-13\"|\"2015-04-10\"|\"SEPA\"|\"RCUR\"|\" \"|\"CORE\"|\"003\"|\"27 \"|188,09|\"EUR\"|\" \"|\"S\"|\"OAP\"|\"PMS\"|\" \"|\" \"|\" \"|\" \"|\" \"|\" \"|\" \"|\" \"|\" \"";
-	// String[] result = FactoryParser.parsePlEmOrden(line.split("\\|"));
-	// System.out.println("ok");
+	// Importe=11,00,Moneda=GBP,Banco origen=BANCO SANTANDER SA,Localidad
+	// origen=ALCOBENDAS,Provincia origen=MADRID,País origen=ESPAÑA,Banco
+	// destino=BANQUE NATIONALE DE PARIS,Localidad desttino=BEOGRAD,Provincia
+	// destino=,País destino=SERBIA
+	private static String[] parseHhDatosBancos(final String line[]) {
+		List<String> extraParameters = new ArrayList<>();
 
-	// String line =
-	// "10|\"IBM\"|\"2015114\"|\"132648118166\"|\"ORN01\"|\"ULTALTA\"|\"REPL\"|\"0000:1d96:0c9d:de31:0002\"|\"0000:ced8:6f4b:cfb4:0001\"|\"2015-04-24-11.26.47\"|\"CCB506SI\"|0001|\"0049\"|“0015\"|“211\"|\" 0555491 \"|\" \"|\"0036\"|\"5777\"|\"632\"|\"BBBJGGR\"|\" \"";
-	// String[] result = FactoryParser.parseUltalta(line.split("\\|"));
-	// System.out.println("ok");
+		String codBancoDestino = line[HH_DATOS_BANCOS.INDEX_BANCO_DESTINO];
+		String codSucursalDestino = line[HH_DATOS_BANCOS.INDEX_SUCURSAL_DESTINO];
+		String codBancoSucursal = codBancoDestino + codSucursalDestino;
 
+		String bancoDestino = cache.get(codBancoDestino,
+				K.CACHE.TABLE_ENT_CRED_EXT_ID);
+		String[] recordOficinaDestino = cache.get(codBancoSucursal,
+				K.CACHE.TABLE_OFI_ENT_EXT_ID).split("\\|");
+		String localidadDestino = recordOficinaDestino[0];
+		String paisDestino = cache.get(recordOficinaDestino[1],
+				K.CACHE.TABLE_PAIS_ID);
+
+		extraParameters.add(bancoDestino);
+		extraParameters.add(localidadDestino);
+		extraParameters.add("");
+		extraParameters.add(paisDestino);
+
+		return extraParameters.toArray(new String[extraParameters.size()]);
+
+	}
 }
