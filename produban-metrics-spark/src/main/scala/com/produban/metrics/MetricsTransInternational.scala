@@ -47,7 +47,7 @@ object MetricsTransInternational {
 
   def main(args: Array[String]) {
 
-    val sparkConf = new SparkConf().setMaster("local[2]").setAppName("app")
+    val sparkConf = new SparkConf().setMaster("local[2]")
     //val sparkConf = new SparkConf()
     val ssc = new StreamingContext(sparkConf, Seconds(10))
 
