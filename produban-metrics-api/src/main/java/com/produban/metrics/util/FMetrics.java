@@ -46,7 +46,7 @@ public interface FMetrics {
         // PL_EM_ORDEN table
 		
 		// Offset from Q-Capture extra blank fields
-		int OFFSET_ISRT = 0;
+		int OFFSET_ISRT = 51;
 		int OFFSET_REPL = 0;
 		int OFFSET_DLET = 0;
 		int OFFSET_UKWN = 0;
@@ -110,6 +110,7 @@ public interface FMetrics {
         String NULTALTA = "ULTALTA";
         String NDISPOSICION_EFECTIVO_CAJERO = "DISPOSICION_EFECTIVO_CAJERO";
         String NHH_TRANSF_EMIT = "TRANSFERENCIAS_INTERNACIONALES";
+        String NHH_DATOS_BANCOS = "TRANSFERENCIAS_INTERNACIONALES_DATOS";
         String NOB_DGO_CONTAB = "PL_EM_ORDEN";
         String NPAGOS_TPV = "PAGOS_TPV";
         String NPL_EM_ORDEN = "TRANSFERENCIAS_NACIONALES";
@@ -179,11 +180,23 @@ public interface FMetrics {
 		int IDXU_PROVINCIA = 2;
 		
 	}
+	interface FHH_DATOS_BANCOS {
+		int LENGTH_HH_DATOS_BANCOS = 30;
+		int LENGTH_EXTRA_FIELDS = 4;
+		
+		int IDXU_Banco_destino = 0;
+		int IDXU_Localidad_destino = 1;
+		int IDXU_Provincia_destino = 2;
+		int IDXU_Pais_destino = 3;
+	}
+	
 	
 	interface FHH_TRANSF_EMIT {
+		int LENGTH_HH_TRANSF = 90;
+		int LENGTH_EXTRA_FIELDS = 6;
 		
 		// Offset from Q-Capture extra blank fields
-		int OFFSET_ISRT = 40;
+		int OFFSET_ISRT = 39;
 		int OFFSET_REPL = 0;
 		int OFFSET_DLET = 0;
 		int OFFSET_UKWN = 0;
@@ -220,11 +233,7 @@ public interface FMetrics {
 		int IDXU_Banco_origen = 2;
 		int IDXU_Localidad_origen = 3;
 		int IDXU_Provincia_origen = 4;
-		int IDXU_Pais_origen = 5;
-		int IDXU_Banco_destino = 6;
-		int IDXU_Localidad_destino = 7;
-		int IDXU_Provincia_destino = 8;
-		int IDXU_Pais_destino = 9;
+		int IDXU_Pais_origen = 5;		
 		
 	}
 	

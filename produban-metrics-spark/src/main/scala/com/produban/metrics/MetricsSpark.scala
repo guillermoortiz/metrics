@@ -33,10 +33,8 @@ object MetricsSpark {
     val extraData = FactoryParser.parser(topic, message)
     val metrics = FactoryCreator.createMetric(topic, message, extraData)
     val documentType = metrics.getDATOS_P().getTabla()
-    val json = JsonUtil.write(metrics)
-    println("1**********************************");
-    println(json);
-    println("XXXX**********************************");
+    val json = JsonUtil.write(metrics)    
+    println(json);    
     
     return (documentType,json)
   }

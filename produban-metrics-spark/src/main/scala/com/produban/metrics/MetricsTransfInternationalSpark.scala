@@ -1,46 +1,44 @@
 package com.produban.metrics
 
-import org.apache.spark.SparkContext
-import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
-import akka.dispatch.Foreach
 import org.apache.spark.streaming.StreamingContext
-import StreamingContext._
-import org.apache.spark.streaming.Seconds
-import org.apache.spark.rdd.PairRDDFunctions
 import org.apache.spark.streaming.kafka.KafkaUtils
+import org.apache.spark.streaming.Seconds
 import kafka.serializer.StringDecoder
-import org.apache.spark.streaming.kafka.KafkaRDD
-import org.apache.spark.streaming.kafka.HasOffsetRanges
-import org.apache.spark.streaming.kafka.OffsetRange
-import com.produban.util.JsonUtil
-import com.produban.api.general.Factory
-import com.produban.api.manager.CacheManager
-import com.produban.cache.redis.RedisCache
-import com.produban.metrics.util.FactoryParser
-import com.produban.indexer.elastic.ElasticIndexer
-import com.produban.metrics.util.FactoryCreator
-import scala.collection.JavaConverters
-import org.apache.commons.math3.util.Pair
 import com.produban.metrics.util.FilterMetrics
 import com.produban.metrics.util.KMetrics
+import com.produban.metrics.util.FactoryParser
 import scala.collection.mutable.ArrayBuffer
+import com.produban.api.general.Factory
+import com.produban.metrics.util.FactoryCreator
+import com.produban.util.JsonUtil
 
-object MetricsInternationalVersion2 {
-  val topicBank = "OB.MATRIX.HOST.HH_DATOS_BANCOS".split("\\.")
-  val topicTransf = "OB.MATRIX.HOST.HH_TRANSF_EMIT".split("\\.")
+object MetricsTransfInternationalSpark {
+  val topicBank = "OB.MATRIX.HOST.HH_DATOS_BANCOS"
+  val topicTransf = "OB.MATRIX.HOST.HH_TRANSF_EMIT"
+
+  val topicBankSplit = "OB.MATRIX.HOST.HH_DATOS_BANCOS".split("\\.")
+  val topicTransfSplit = "OB.MATRIX.HOST.HH_TRANSF_EMIT".split("\\.")
 
   /**
    * Create a Tuple (documentType,json)
    */
   def createObject(transf: Iterable[Array[String]], banks: Iterable[Array[String]]): (String, String) = {
     val bankData: ArrayBuffer[String] = ArrayBuffer();
+    val transferData: ArrayBuffer[String] = ArrayBuffer();
+    val bankRawData: ArrayBuffer[String] = ArrayBuffer();
 
     for (bankMessage <- banks) {
-      val extraData = FactoryParser.parser(topicBank, bankMessage)
+      val extraData = FactoryParser.parser(topicBankSplit, bankMessage)
       bankData ++= extraData
+      bankRawData ++= bankMessage
     }
-    val metrics = FactoryCreator.createMetric(topicTransf, transf.head, bankData.toArray)
+    val banksLine = bankRawData.toArray
+    transferData ++= FactoryParser.parser(topicTransfSplit, transf.head)
+    transferData ++= bankData
+    val finalLine = transf.head ++ banksLine
+
+    val metrics = FactoryCreator.createMetric(topicTransfSplit, finalLine, transferData.toArray)
     val documentType = metrics.getDATOS_P().getTabla()
     val json = JsonUtil.write(metrics)
 
@@ -48,29 +46,29 @@ object MetricsInternationalVersion2 {
   }
 
   def main(args: Array[String]) {
-    if (args.length != 1) {
-      println("It's neccesary one parameter");
-      println("First, zookeeper paratemers separater by ,. Ex: quickstart01.cloudera:9092,quickstart02.cloudera:9092");
-      System.exit(-1);
-    }
 
-    val sparkConf = new SparkConf().setMaster("local[4]").setAppName("app")
+    val sparkConf = new SparkConf().setMaster("local[2]")
     //val sparkConf = new SparkConf()
-    val ssc = new StreamingContext(sparkConf, Seconds(5))
+    val ssc = new StreamingContext(sparkConf, Seconds(10))
 
-    val kafkaParams = Map[String, String]("metadata.broker.list" -> args(0))
-    val interTransEmit = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, topicTransf.toSet)
-    val internationalBanks = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, topicBank.toSet)
+    //val kafkaParams = Map[String, String]("metadata.broker.list" -> kafkaHosts)
+    val kafkaParams = Map[String, String]("metadata.broker.list" -> "quickstart.cloudera:9092")
 
-    val interTransEmitStream = interTransEmit.window(Seconds(10), Seconds(5))
-    val internationalBanksStream = internationalBanks.window(Seconds(10), Seconds(5))
+    val topic1 = Set(topicTransf)
+    val topic2 = Set(topicBank)
 
-    //Clean and split message        
-    val emitTrans = interTransEmitStream.map { event =>
+    val stream1 = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, topic1)
+    val stream2 = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, topic2)
+
+    val stream1Windows = stream1.window(Seconds(20), Seconds(10))
+    val stream2Windows = stream2.window(Seconds(20), Seconds(10))
+
+    //generate tuples(documentType,jsonMessage) for each message got from Kafka 
+    val emitTrans = stream1Windows.map { event =>
       val eventCleaned = event._2.replace("\"", "")
       eventCleaned.split("\\|")
     }
-    //Check the mandatories fields for HH_TRANSF_EMIT.
+
     val emTransFiltered = emitTrans.filter(event => FilterMetrics.filter("HH_TRANSF_EMIT", event))
 
     //Generate tuple (idJoin, recordTransfer)
@@ -82,17 +80,13 @@ object MetricsInternationalVersion2 {
       (id, register)
     }
 
-    println("*************************EMITIDAS:");
-    tupleEmTranf.print()
-    println("*************************FIN EMITIDAS:");
-
     //generate tuples(documentType,jsonMessage) for each message got from Kafka        
-    val banks = internationalBanksStream.map { event =>
+    val banks = stream2Windows.map { event =>
       val eventCleaned = event._2.replace("\"", "")
       eventCleaned.split("\\|")
     }
     //Check the mandatories fields for HH_TRANSF_EMIT.
-    val banksFiltered = emitTrans.filter(event => FilterMetrics.filter("HH_DATOS_BANCOS", event))
+    val banksFiltered = banks.filter(event => FilterMetrics.filter("HH_DATOS_BANCOS", event))
 
     //Generate tuple (idJoin, recordBank)
     val tupleBanks = banksFiltered.map { register =>
@@ -105,17 +99,22 @@ object MetricsInternationalVersion2 {
 
     //Cogroup tables and filter where I got the log from the tansfer table
     val joinTables = tupleEmTranf.cogroup(tupleBanks).filter(t => t._2._1.size > 0)
-    
+
     //Create the JSON object (idElastic, json)
     val documents = joinTables.map { join =>
+
       val id = join._1
       val tranf = join._2._1
       val banks = join._2._2
-      
+
+      println("id2:" + join._1);
+      join._2._1.foreach(s => println("T2:" + runtime.ScalaRunTime.stringOf(s)))
+      join._2._2.foreach(s => println("B2:" + runtime.ScalaRunTime.stringOf(s)))
+
       (id, createObject(tranf, banks))
     }
 
-    //Indez in Elastic
+    //Index in Elastic
     documents.foreachRDD { rdd =>
       rdd.foreachPartition { rddPartition =>
         val indexer = Factory.getIndexerManager()
@@ -130,6 +129,7 @@ object MetricsInternationalVersion2 {
     }
 
     ssc.start()
-    ssc.awaitTermination()
+    ssc.awaitTermination();
+
   }
 }
