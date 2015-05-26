@@ -8,7 +8,8 @@
       http://www.springframework.org/schema/context 
       http://www.springframework.org/schema/context/spring-context.xsd">
 	
-	<context:property-placeholder location="classpath:redis.properties,elasticSearch.properties" />
+	<!-- <context:property-placeholder location="classpath:redis.properties,elasticSearch.properties" />-->
+	<context:property-placeholder location="classpath*:*.properties" />
 	
 	
 	<alias name="cacheManager" alias="cacheManager" />
