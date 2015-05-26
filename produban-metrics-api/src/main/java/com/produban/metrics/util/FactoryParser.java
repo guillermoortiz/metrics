@@ -3,7 +3,6 @@ package com.produban.metrics.util;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.StringUtils;
 
 import com.produban.api.general.Factory;
@@ -57,9 +56,9 @@ public class FactoryParser implements KMetrics {
 	}
 
 	// Importe=188,09,Moneda=EUR,Banco Origen=BANCO SANTANDER SA,Localidad
-	// Origen=ALCOBENDAS,Provincia Origen=MADRID,País Origen=ESPAÑA,Banco
+	// Origen=ALCOBENDAS,Provincia Origen=MADRID,Pais Origen=ESPAA,Banco
 	// Destino=BANQUE NATIONALE DE PARIS,Localidad Destino=BEOGRAD,Provincia
-	// destino=,País destino=SERBIA
+	// destino=,Pais destino=SERBIA
 	private static String[] parsePlEmOrden(String[] line) {
 		String[] extraParameters = new String[PLEMORDEN.EXTRA_PARAMS];
 
@@ -118,7 +117,7 @@ public class FactoryParser implements KMetrics {
 	}
 
 	// Codigo Empresa=0049,Codigo sucursal=0015,Nombre sucursal=ALCOBENDAS
-	// URBANA CONSTITUCION,Código producto=211,Producto=CREDITOS GENERALES
+	// URBANA CONSTITUCION,Cdigo producto=211,Producto=CREDITOS GENERALES
 	private static String[] parseUltalta(final String[] line) {
 		String[] extraParameters = new String[ULTALTA.EXTRA_PARAMS];
 		String codEmpresa = line[ULTALTA.INDEX_COD_EMPRESA];
@@ -150,7 +149,7 @@ public class FactoryParser implements KMetrics {
 	}
 
 	// Importe=10,91,Moneda=EUR,TPV=0000304100,Comercio=ARROCERIA
-	// BALEAR,Localidad=ALCOBENDAS,Provincia=MADRID,Pais=ESPAÑA
+	// BALEAR,Localidad=ALCOBENDAS,Provincia=MADRID,Pais=ESPAA
 	private static String[] parseObDgoContabTPV(final String line[]) {
 		String[] extraParameters = new String[OBDGOCONTAB_TPV.EXTRA_PARAMS];
 		String importe = line[OBDGOCONTAB_TPV.INDEX_IMPORTE];
@@ -179,7 +178,7 @@ public class FactoryParser implements KMetrics {
 
 	}
 
-	// Importe=10,91,Moneda=EUR,Localidad=ALCOBENDAS,Provincia=MADRID,Pais=ESPAÑA
+	// Importe=10,91,Moneda=EUR,Localidad=ALCOBENDAS,Provincia=MADRID,Pais=ESPAA
 	private static String[] parseObDgoContabEfectivo(final String line[]) {
 		String[] extraParameters = new String[OBDGOCONTAB_EFECTIVO.EXTRA_PARAMS];
 		String importe = line[OBDGOCONTAB_EFECTIVO.INDEX_IMPORTE];
@@ -205,9 +204,9 @@ public class FactoryParser implements KMetrics {
 	}
 
 	// Importe=11,00,Moneda=GBP,Banco origen=BANCO SANTANDER SA,Localidad
-	// origen=ALCOBENDAS,Provincia origen=MADRID,País origen=ESPAÑA,Banco
+	// origen=ALCOBENDAS,Provincia origen=MADRID,Pais origen=ESPAA,Banco
 	// destino=BANQUE NATIONALE DE PARIS,Localidad desttino=BEOGRAD,Provincia
-	// destino=,País destino=SERBIA
+	// destino=,Pais destino=SERBIA
 	private static String[] parseHhTransfEmit(final String line[]) {
 		List<String> extraParameters = new ArrayList<String>();
 
@@ -238,9 +237,9 @@ public class FactoryParser implements KMetrics {
 	}
 
 	// Importe=11,00,Moneda=GBP,Banco origen=BANCO SANTANDER SA,Localidad
-	// origen=ALCOBENDAS,Provincia origen=MADRID,País origen=ESPAÑA,Banco
+	// origen=ALCOBENDAS,Provincia origen=MADRID,Pais origen=ESPAA,Banco
 	// destino=BANQUE NATIONALE DE PARIS,Localidad desttino=BEOGRAD,Provincia
-	// destino=,País destino=SERBIA
+	// destino=,Pais destino=SERBIA
 	private static String[] parseHhDatosBancos(final String line[]) {
 		List<String> extraParameters = new ArrayList<>();
 
