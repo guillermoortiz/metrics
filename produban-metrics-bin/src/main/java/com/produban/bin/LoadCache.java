@@ -14,11 +14,7 @@ import org.apache.log4j.Logger;
 import com.produban.api.general.Factory;
 import com.produban.api.general.K;
 import com.produban.api.manager.CacheManager;
-import com.produban.metrics.entities.Metrics;
-import com.produban.metrics.util.FactoryCreator;
-import com.produban.metrics.util.FactoryParser;
 import com.produban.util.HDFSUtils;
-import com.produban.util.JsonUtil;
 
 public class LoadCache {
 	private static final Logger LOG = Logger.getLogger(LoadCache.class);
