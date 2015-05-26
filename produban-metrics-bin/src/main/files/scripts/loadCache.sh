@@ -9,7 +9,7 @@ do
 	else
 		SPARK_CLASSPATH=$CONF_CLASSPATH:$lib:$SPARK_CLASSPATH
 	fi
-done
+done 
 
 java -cp $SPARK_CLASSPATH com.produban.bin.LoadCache
 

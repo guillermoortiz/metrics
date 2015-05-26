@@ -9,6 +9,6 @@ do
 	else
 		SPARK_CLASSPATH=$SPARK_CLASSPATH,$lib
 	fi
-done
+done 
 
 spark-submit --name "Metrics International Tranferences" --master yarn-client --class com.produban.metrics.MetricsTransfInternationalSpark --jars $SPARK_CLASSPATH --executor-memory 1g /usr/metrics/ex/produban-metrics-spark.jar
