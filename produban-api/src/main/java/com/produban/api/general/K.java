@@ -50,6 +50,8 @@ public interface K {
 		String TABLE_PAIS_ID = "P:";
 		String TABLE_PLAZA_ID = "PZ:";
 		String TABLE_PROVINCIA_ID = "PV:";
+		String TABLE_COORDENADAS_NACIONALES_ID = "COE:";
+		String TABLE_COORDENADAS_INTERNACIONALES_ID = "COI:";
 
 	}
 
