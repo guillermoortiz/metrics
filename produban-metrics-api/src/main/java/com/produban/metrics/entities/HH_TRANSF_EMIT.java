@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.produban.metrics.util.FMetrics;
 
 public class HH_TRANSF_EMIT implements Serializable, FMetrics, Metrics {
@@ -61,8 +62,7 @@ public class HH_TRANSF_EMIT implements Serializable, FMetrics, Metrics {
 	private String Localidad_origen;
 	private String Provincia_origen;
 	private String Pais_origen;
-	
-	
+	private String coordenadasOrigen;
 
 	public HH_DATOS_BANCOS[] getHh_datos_bancos() {
 		return hh_datos_bancos;
@@ -164,6 +164,7 @@ public class HH_TRANSF_EMIT implements Serializable, FMetrics, Metrics {
 		PROCEDENCIA_TRANSFERENCIA = pROCEDENCIA_TRANSFERENCIA;
 	}
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	public Date getFECHA_ALTA_TRANSFERENCIA() {
 		return FECHA_ALTA_TRANSFERENCIA;
 	}
@@ -172,6 +173,7 @@ public class HH_TRANSF_EMIT implements Serializable, FMetrics, Metrics {
 		FECHA_ALTA_TRANSFERENCIA = fECHA_ALTA_TRANSFERENCIA;
 	}
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	public Date getFECHA_VALOR_ABONO_TRANSFERENCIA() {
 		return FECHA_VALOR_ABONO_TRANSFERENCIA;
 	}
@@ -181,6 +183,7 @@ public class HH_TRANSF_EMIT implements Serializable, FMetrics, Metrics {
 		FECHA_VALOR_ABONO_TRANSFERENCIA = fECHA_VALOR_ABONO_TRANSFERENCIA;
 	}
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	public Date getFECHA_VALOR_ADEUDO_TRANSFERENCIA() {
 		return FECHA_VALOR_ADEUDO_TRANSFERENCIA;
 	}
@@ -190,6 +193,7 @@ public class HH_TRANSF_EMIT implements Serializable, FMetrics, Metrics {
 		FECHA_VALOR_ADEUDO_TRANSFERENCIA = fECHA_VALOR_ADEUDO_TRANSFERENCIA;
 	}
 
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	public Date getHHG_TIMESTAMP() {
 		return HHG_TIMESTAMP;
 	}
@@ -324,7 +328,13 @@ public class HH_TRANSF_EMIT implements Serializable, FMetrics, Metrics {
 		Pais_origen = pais_origen;
 	}
 
-	
+	public String getCoordenadasOrigen() {
+		return coordenadasOrigen;
+	}
+
+	public void setCoordenadasOrigen(String coordenadasOrigen) {
+		this.coordenadasOrigen = coordenadasOrigen;
+	}
 
 	// Constructor
 	public HH_TRANSF_EMIT(String[] produbanLine, String[] line, String[] fields) {
@@ -336,7 +346,14 @@ public class HH_TRANSF_EMIT implements Serializable, FMetrics, Metrics {
 		Integer offset = 0;
 		if (this.DATOS_Q.getEvento().equals(QCaptureMeta.tipo_evento.ISRT)) {
 			offset = FHH_TRANSF_EMIT.OFFSET_ISRT;
-		} else {
+		} else if (this.DATOS_Q.getEvento().equals(
+				QCaptureMeta.tipo_evento.REPL)) {
+			offset = FHH_TRANSF_EMIT.OFFSET_REPL;
+		} else if (this.DATOS_Q.getEvento().equals(
+				QCaptureMeta.tipo_evento.DLET)) {
+			offset = FHH_TRANSF_EMIT.OFFSET_DLET;
+		} else if (this.DATOS_Q.getEvento().equals(
+				QCaptureMeta.tipo_evento.UKWN)) {
 			offset = FHH_TRANSF_EMIT.OFFSET_UKWN;
 		}
 
@@ -390,19 +407,17 @@ public class HH_TRANSF_EMIT implements Serializable, FMetrics, Metrics {
 		this.PROCEDENCIA_TRANSFERENCIA = line[FQCaptureMeta.OFFSET_numFields
 				+ offset + 18]; // (MARCAJE, PERIODICA, ETC)
 		SimpleDateFormat datetimeFormatter1 = new SimpleDateFormat(
-				COMMONS.DATE_FORMAT);
-		/*try {
+				COMMONS.DATE_FORMAT2);
+		try {
 			String fecha;
-			fecha = line[FQCaptureMeta.OFFSET_numFields + offset + 21]
-					.substring(0, 23);
+			fecha = line[FQCaptureMeta.OFFSET_numFields + offset + 21];
 			this.FECHA_ALTA_TRANSFERENCIA = datetimeFormatter1.parse(fecha);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		try {
 			String fecha;
-			fecha = line[FQCaptureMeta.OFFSET_numFields + offset + 22]
-					.substring(0, 23);
+			fecha = line[FQCaptureMeta.OFFSET_numFields + offset + 22];
 			this.FECHA_VALOR_ABONO_TRANSFERENCIA = datetimeFormatter1
 					.parse(fecha);
 		} catch (ParseException e) {
@@ -410,8 +425,7 @@ public class HH_TRANSF_EMIT implements Serializable, FMetrics, Metrics {
 		}
 		try {
 			String fecha;
-			fecha = line[FQCaptureMeta.OFFSET_numFields + offset + 23]
-					.substring(0, 23);
+			fecha = line[FQCaptureMeta.OFFSET_numFields + offset + 23];
 			this.FECHA_VALOR_ADEUDO_TRANSFERENCIA = datetimeFormatter1
 					.parse(fecha);
 		} catch (ParseException e) {
@@ -419,8 +433,7 @@ public class HH_TRANSF_EMIT implements Serializable, FMetrics, Metrics {
 		}
 		try {
 			String fecha;
-			fecha = line[FQCaptureMeta.OFFSET_numFields + offset + 24]
-					.substring(0, 23);
+			fecha = line[FQCaptureMeta.OFFSET_numFields + offset + 24];
 			this.HHG_TIMESTAMP = datetimeFormatter1.parse(fecha);
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -439,8 +452,7 @@ public class HH_TRANSF_EMIT implements Serializable, FMetrics, Metrics {
 				+ offset + 37];
 		try {
 			String fecha;
-			fecha = line[FQCaptureMeta.OFFSET_numFields + offset + 38]
-					.substring(0, 23);
+			fecha = line[FQCaptureMeta.OFFSET_numFields + offset + 38];
 			this.FECHA_ULTIMA_MODIFICACION = datetimeFormatter1.parse(fecha);
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -452,7 +464,7 @@ public class HH_TRANSF_EMIT implements Serializable, FMetrics, Metrics {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-*/
+
 		createHH_DATOS_BANCOS(produbanLine, line, fields);
 
 		// User data
@@ -460,7 +472,8 @@ public class HH_TRANSF_EMIT implements Serializable, FMetrics, Metrics {
 		this.Banco_origen = fields[FHH_TRANSF_EMIT.IDXU_Banco_origen];
 		this.Localidad_origen = fields[FHH_TRANSF_EMIT.IDXU_Localidad_origen];
 		this.Provincia_origen = fields[FHH_TRANSF_EMIT.IDXU_Provincia_origen];
-		this.Pais_origen = fields[FHH_TRANSF_EMIT.IDXU_Pais_origen];		
+		this.Pais_origen = fields[FHH_TRANSF_EMIT.IDXU_Pais_origen];
+		this.coordenadasOrigen = fields[FHH_TRANSF_EMIT.IDXU_COORDENADAS_ORIGEN];
 
 	}
 
@@ -522,8 +535,8 @@ public class HH_TRANSF_EMIT implements Serializable, FMetrics, Metrics {
 				+ ", Importe=" + Importe + ", Moneda=" + Moneda
 				+ ", Banco_origen=" + Banco_origen + ", Localidad_origen="
 				+ Localidad_origen + ", Provincia_origen=" + Provincia_origen
-				+ ", Pais_origen=" + Pais_origen + "]";
+				+ ", Pais_origen=" + Pais_origen + ", coordenadasOrigen="
+				+ coordenadasOrigen + "]";
 	}
 
-	
 }

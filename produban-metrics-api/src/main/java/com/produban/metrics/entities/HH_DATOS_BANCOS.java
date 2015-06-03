@@ -12,6 +12,7 @@ public class HH_DATOS_BANCOS implements Serializable, FMetrics {
 	private String Localidad_destino;
 	private String Provincia_destino;
 	private String Pais_destino;
+	private String coordenadaDestino;
 
 	/**
 	 * 
@@ -46,7 +47,39 @@ public class HH_DATOS_BANCOS implements Serializable, FMetrics {
 		this.Localidad_destino = fields[FHH_DATOS_BANCOS.IDXU_Localidad_destino];
 		this.Provincia_destino = fields[FHH_DATOS_BANCOS.IDXU_Provincia_destino];
 		this.Pais_destino = fields[FHH_DATOS_BANCOS.IDXU_Pais_destino];
+		this.coordenadaDestino = fields[FHH_DATOS_BANCOS.IDXU_COORDENADA_DESTINO];
 	}
+
+	
+	public ProdubanMeta getDATOS_P() {
+		return DATOS_P;
+	}
+
+
+	public void setDATOS_P(ProdubanMeta dATOS_P) {
+		DATOS_P = dATOS_P;
+	}
+
+
+	public QCaptureMeta getDATOS_Q() {
+		return DATOS_Q;
+	}
+
+
+	public void setDATOS_Q(QCaptureMeta dATOS_Q) {
+		DATOS_Q = dATOS_Q;
+	}
+
+
+	public String getCoordenadaDestino() {
+		return coordenadaDestino;
+	}
+
+
+	public void setCoordenadaDestino(String coordenadaDestino) {
+		this.coordenadaDestino = coordenadaDestino;
+	}
+
 
 	public String getBanco_destino() {
 		return Banco_destino;
@@ -80,12 +113,16 @@ public class HH_DATOS_BANCOS implements Serializable, FMetrics {
 		Pais_destino = pais_destino;
 	}
 
+
 	@Override
 	public String toString() {
 		return "HH_DATOS_BANCOS [Banco_destino=" + Banco_destino
 				+ ", Localidad_destino=" + Localidad_destino
 				+ ", Provincia_destino=" + Provincia_destino
-				+ ", Pais_destino=" + Pais_destino + ", DATOS_P=" + DATOS_P
-				+ ", DATOS_Q=" + DATOS_Q + "]";
+				+ ", Pais_destino=" + Pais_destino + ", coordenadaDestino="
+				+ coordenadaDestino + ", DATOS_P=" + DATOS_P + ", DATOS_Q="
+				+ DATOS_Q + "]";
 	}
+
+	
 }

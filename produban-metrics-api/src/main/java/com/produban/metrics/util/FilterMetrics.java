@@ -1,5 +1,7 @@
 package com.produban.metrics.util;
 
+import com.esotericsoftware.minlog.Log;
+
 /**
  * Class to filter message. It checks the minimum requisites to be a valid
  * message.
@@ -27,31 +29,38 @@ public class FilterMetrics implements KMetrics {
 	public static boolean filter(final String tableName,
 			final String[] splitLine) {
 		boolean filter = false;
-		switch (tableName) {
 
-		case ULTALTA.ULTALTA:
-			filter = filterUltalta(splitLine);
-			break;
+		try {
 
-		case PLEMORDEN.PL_EM_ORDEN:
-			filter = filterPlEmOrden(splitLine);
-			break;
+			switch (tableName) {
 
-		case OBDGOCONTAB.OB_DGO_CONTAB:
-			filter = filterObDgoContab(splitLine);
-			break;
+			case ULTALTA.ULTALTA:
+				filter = filterUltalta(splitLine);
+				break;
 
-		case HH_DATOS_BANCOS.HH_DATOS_BANCOS:
-			filter = filterHhDatosBancos(splitLine);
-			break;
+			case PLEMORDEN.PL_EM_ORDEN:
+				filter = filterPlEmOrden(splitLine);
+				break;
 
-		case HH_TRANSF_EMIT.HH_TRANSF_EMIT:
-			filter = filterHhTransfEmit(splitLine);
-			break;
+			case OBDGOCONTAB.OB_DGO_CONTAB:
+				filter = filterObDgoContab(splitLine);
+				break;
 
-		default:
-			filter = true;
-			break;
+			case HH_DATOS_BANCOS.HH_DATOS_BANCOS:
+				filter = filterHhDatosBancos(splitLine);
+				break;
+
+			case HH_TRANSF_EMIT.HH_TRANSF_EMIT:
+				filter = filterHhTransfEmit(splitLine);
+				break;
+
+			default:
+				filter = false;
+				break;
+			}
+		} catch (Exception ex) {
+			Log.error("Error trying to validate line,  it's not a valid line", ex);
+			filter = false;
 		}
 
 		return filter;
@@ -82,11 +91,12 @@ public class FilterMetrics implements KMetrics {
 				&& splitLine[KMetrics.HH_DATOS_BANCOS.INDEX_CHECK_B].equals(B);
 	}
 
-	private static boolean filterHhTransfEmit(String[] splitLine) {		
+	private static boolean filterHhTransfEmit(String[] splitLine) {
 		return splitLine[INDEX_CHECK_TYPE_ORDEN]
 				.equals(KMetrics.HH_TRANSF_EMIT.HH_TRANSF_EMIT)
 				&& splitLine[INDEX_CHECK_TYPE_OP].equals(ISRT)
-				&& splitLine[KMetrics.HH_TRANSF_EMIT.INDEX_CONS1].trim().equals(IND);
+				&& splitLine[KMetrics.HH_TRANSF_EMIT.INDEX_CONS1].trim()
+						.equals(IND);
 	}
 
 	private static boolean filterPlEmOrden(String[] splitLine) {

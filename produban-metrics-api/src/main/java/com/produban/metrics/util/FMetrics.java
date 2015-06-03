@@ -84,6 +84,8 @@ public interface FMetrics {
 		int IDXU_Localidad_Destino = 7;
 		int IDXU_Provincia_Destino = 8;
 		int IDXU_Pais_Destino = 9;
+		int IDXU_COORDENADA_ORIGEN = 10;
+		int IDXU_COORDENADA_DESTINO = 11;
 		
 		// Loop increments for Banco, Localidad, Provincia, Destino iterations
 		int INC_UserData = 4;
@@ -117,6 +119,7 @@ public interface FMetrics {
         
         // Other constants
         String DATE_FORMAT = "yyyy-MM-dd-hh.mm.ss.SSS";
+        String DATE_FORMAT2 = "yyyy-MM-dd";
         char DECIMAL_SEPARATOR = ',';
         
         
@@ -164,6 +167,7 @@ public interface FMetrics {
 		int IDXU_Localidad = 4;
 		int IDXU_Provincia = 5;
 		int IDXU_Pais = 6;
+		int IDXU_COORDENADAS = 7;
 	}
 	
 	interface FDISPOSICION_EFECTIVO_CAJERO {
@@ -182,22 +186,23 @@ public interface FMetrics {
 	}
 	interface FHH_DATOS_BANCOS {
 		int LENGTH_HH_DATOS_BANCOS = 30;
-		int LENGTH_EXTRA_FIELDS = 4;
+		int LENGTH_EXTRA_FIELDS = 5;
 		
 		int IDXU_Banco_destino = 0;
 		int IDXU_Localidad_destino = 1;
 		int IDXU_Provincia_destino = 2;
 		int IDXU_Pais_destino = 3;
+		int IDXU_COORDENADA_DESTINO = 4;
 	}
 	
 	
 	interface FHH_TRANSF_EMIT {
 		int LENGTH_HH_TRANSF = 90;
-		int LENGTH_EXTRA_FIELDS = 6;
+		int LENGTH_EXTRA_FIELDS = 7;
 		
 		// Offset from Q-Capture extra blank fields
 		int OFFSET_ISRT = 39;
-		int OFFSET_REPL = 0;
+		int OFFSET_REPL = 39;
 		int OFFSET_DLET = 0;
 		int OFFSET_UKWN = 0;
 		
@@ -233,7 +238,8 @@ public interface FMetrics {
 		int IDXU_Banco_origen = 2;
 		int IDXU_Localidad_origen = 3;
 		int IDXU_Provincia_origen = 4;
-		int IDXU_Pais_origen = 5;		
+		int IDXU_Pais_origen = 5;
+		int IDXU_COORDENADAS_ORIGEN = 6;	
 		
 	}
 	

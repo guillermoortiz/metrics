@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.produban.metrics.util.FMetrics;
 
 public class OB_DGO_CONTAB implements Serializable, FMetrics, Metrics{
@@ -65,6 +66,7 @@ public class OB_DGO_CONTAB implements Serializable, FMetrics, Metrics{
 	public void setMONEDA(String mONEDA) {
 		MONEDA = mONEDA;
 	}
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	public Date getFECHA_OPERACION() {
 		return FECHA_OPERACION;
 	}
@@ -77,6 +79,7 @@ public class OB_DGO_CONTAB implements Serializable, FMetrics, Metrics{
 	public void setUSUARIO(String uSUARIO) {
 		USUARIO = uSUARIO;
 	}
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	public Date getTIMESTAMP_EJECUCION() {
 		return TIMESTAMP_EJECUCION;
 	}

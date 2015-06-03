@@ -25,7 +25,7 @@ public interface KMetrics {
 	}
 
 	interface OBDGOCONTAB_TPV {
-		int EXTRA_PARAMS = 7;
+		int EXTRA_PARAMS = 8;
 		int INDEX_IMPORTE = 51;
 		int INDEX_MONEDA = 52;
 		int INDEX_DGO_PARAMS = 67;
@@ -60,7 +60,7 @@ public interface KMetrics {
 	}
 
 	interface OBDGOCONTAB_EFECTIVO {
-		int EXTRA_PARAMS = 6;
+		int EXTRA_PARAMS = 7;
 		int INDEX_IMPORTE = 51;
 		int INDEX_MONEDA = 52;
 		int INDEX_DGO_PARAMS = 67;		
@@ -75,7 +75,7 @@ public interface KMetrics {
 		int INDEX_SUCURSAL_ORIGEN = 64;
 		int INDEX_BANCO_DESTINO = 82;
 		int INDEX_SUCURSAL_DESTINO = 83;
-		int EXTRA_PARAMS = 10;		
+		int EXTRA_PARAMS = 12;		
 		
 		int INDEX_CHECK1 = 10;
 		int INDEX_CHECK_999 = 71;

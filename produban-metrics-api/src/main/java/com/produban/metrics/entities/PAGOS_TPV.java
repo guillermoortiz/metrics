@@ -14,6 +14,7 @@ public class PAGOS_TPV extends OB_DGO_CONTAB implements Serializable, FMetrics {
 	private String Localidad;
 	private String Provincia;
 	private String Pais;
+	private String coordenadasLocalizacion;
 	
 	public String getImporte() {
 		return Importe;
@@ -70,6 +71,17 @@ public class PAGOS_TPV extends OB_DGO_CONTAB implements Serializable, FMetrics {
 	public void setPais(String pais) {
 		Pais = pais;
 	}
+	
+
+
+	public String getCoordenadasLocalizacion() {
+		return coordenadasLocalizacion;
+	}
+
+	public void setCoordenadasLocalizacion(String coordenadasLocalizacion) {
+		this.coordenadasLocalizacion = coordenadasLocalizacion;
+	}
+
 
 
 	/**
@@ -104,5 +116,6 @@ public class PAGOS_TPV extends OB_DGO_CONTAB implements Serializable, FMetrics {
 		this.Localidad = fields[FPAGOS_TPV.IDXU_Localidad];
 		this.Provincia = fields[FPAGOS_TPV.IDXU_Provincia];
 		this.Pais = fields[FPAGOS_TPV.IDXU_Pais];
+		this.coordenadasLocalizacion = fields[FPAGOS_TPV.IDXU_COORDENADAS];
 	}	
 }

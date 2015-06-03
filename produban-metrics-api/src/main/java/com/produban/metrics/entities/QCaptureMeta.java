@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.produban.metrics.util.FMetrics.FQCaptureMeta;
 
 public class QCaptureMeta implements Serializable {
@@ -21,6 +22,8 @@ public class QCaptureMeta implements Serializable {
 	private String owner;
 	private String tabla;
 	private tipo_evento evento;
+	
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private Date fecha_hora;
 	private String plan;
 	
@@ -42,7 +45,7 @@ public class QCaptureMeta implements Serializable {
 	}
 	public void setEvento(tipo_evento evento) {
 		this.evento = evento;
-	}
+	}	
 	public Date getFecha_hora() {
 		return fecha_hora;
 	}

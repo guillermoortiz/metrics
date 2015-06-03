@@ -1,14 +1,13 @@
 package com.produban.metrics.entities;
 
 import java.math.BigDecimal;
-import java.sql.Timestamp;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.produban.metrics.util.FMetrics;
 
 public class PL_EM_ORDEN implements Metrics, FMetrics {
@@ -51,11 +50,13 @@ public class PL_EM_ORDEN implements Metrics, FMetrics {
 									// DATOS_Q.numFields; (12)
 	private String USUARIO_ALTA; // E5604_USUALT index 25 + DATOS_Q.numFields;
 									// (12)
-	private Timestamp TIMESPTAMP_ALTA; // E5604_TIMALTA index 26 +
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd-hh.mm.ss.SSS")
+	private Date TIMESPTAMP_ALTA; // E5604_TIMALTA index 26 +
 										// DATOS_Q.numFields; (12)
 	private String USUARIO_MODIFICACION; // E5604_USUMOD index 27 +
 											// DATOS_Q.numFields; (12)
-	private Timestamp TIMESTAMP_MODIFICACION; // E5604_TIMESMOD index 28 +
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd-hh.mm.ss.SSS")
+	private Date TIMESTAMP_MODIFICACION; // E5604_TIMESMOD index 28 +
 												// DATOS_Q.numFields; (12)
 	private String PAGO_DE_REMESA; // E5604_IMPPAG00 index 37 +
 									// DATOS_Q.numFields; (12)
@@ -71,6 +72,8 @@ public class PL_EM_ORDEN implements Metrics, FMetrics {
 	private String Localidad_Destino;
 	private String Provincia_Destino;
 	private String Pais_Destino;
+	private String coordenadasOrigen;
+	private String coordenadasDestino;
 
 	// getters and setters
 	public QCaptureMeta getDATOS_Q() {
@@ -193,11 +196,12 @@ public class PL_EM_ORDEN implements Metrics, FMetrics {
 		USUARIO_ALTA = uSUARIO_ALTA;
 	}
 
-	public Timestamp getTIMESPTAMP_ALTA() {
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	public Date getTIMESPTAMP_ALTA() {
 		return TIMESPTAMP_ALTA;
 	}
 
-	public void setTIMESPTAMP_ALTA(Timestamp tIMESPTAMP_ALTA) {
+	public void setTIMESPTAMP_ALTA(Date tIMESPTAMP_ALTA) {
 		TIMESPTAMP_ALTA = tIMESPTAMP_ALTA;
 	}
 
@@ -209,11 +213,12 @@ public class PL_EM_ORDEN implements Metrics, FMetrics {
 		USUARIO_MODIFICACION = uSUARIO_MODIFICACION;
 	}
 
-	public Timestamp getTIMESTAMP_MODIFICACION() {
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	public Date getTIMESTAMP_MODIFICACION() {
 		return TIMESTAMP_MODIFICACION;
 	}
 
-	public void setTIMESTAMP_MODIFICACION(Timestamp tIMESTAMP_MODIFICACION) {
+	public void setTIMESTAMP_MODIFICACION(Date tIMESTAMP_MODIFICACION) {
 		TIMESTAMP_MODIFICACION = tIMESTAMP_MODIFICACION;
 	}
 
@@ -316,8 +321,27 @@ public class PL_EM_ORDEN implements Metrics, FMetrics {
 	public void setPais_Destino(String pais_Destino) {
 		Pais_Destino = pais_Destino;
 	}
+	
+
+	
 
 	// Constructor
+	public String getCoordenadasOrigen() {
+		return coordenadasOrigen;
+	}
+
+	public void setCoordenadasOrigen(String coordenadasOrigen) {
+		this.coordenadasOrigen = coordenadasOrigen;
+	}
+
+	public String getCoordenadasDestino() {
+		return coordenadasDestino;
+	}
+
+	public void setCoordenadasDestino(String coordenadasDestino) {
+		this.coordenadasDestino = coordenadasDestino;
+	}
+
 	public PL_EM_ORDEN(String[] produbanLine, String[] line, String[] fields) {
 
 		// Q-Capture metadata
@@ -382,11 +406,11 @@ public class PL_EM_ORDEN implements Metrics, FMetrics {
 			fecha = line[FQCaptureMeta.OFFSET_numFields
 					+ FPL_EM_ORDEN.IDXT_TIMESPTAMP_ALTA + offset].substring(0,
 					23);
-			lFromDate1 = datetimeFormatter1.parse(fecha);
+			TIMESPTAMP_ALTA = datetimeFormatter1.parse(fecha);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		this.TIMESPTAMP_ALTA = new Timestamp(lFromDate1.getTime());
+		//this.TIMESPTAMP_ALTA = new Timestamp(lFromDate1.getTime());
 		this.USUARIO_MODIFICACION = line[FQCaptureMeta.OFFSET_numFields
 				+ FPL_EM_ORDEN.IDXT_USUARIO_ALTA + offset];
 		try {
@@ -394,11 +418,11 @@ public class PL_EM_ORDEN implements Metrics, FMetrics {
 			fecha = line[FQCaptureMeta.OFFSET_numFields
 					+ FPL_EM_ORDEN.IDXT_TIMESTAMP_MODIFICACION + offset]
 					.substring(0, 23);
-			lFromDate1 = datetimeFormatter1.parse(fecha);
+			TIMESTAMP_MODIFICACION = datetimeFormatter1.parse(fecha);
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		this.TIMESTAMP_MODIFICACION = new Timestamp(lFromDate1.getTime());
+		//this.TIMESTAMP_MODIFICACION = new Timestamp(lFromDate1.getTime());
 		this.PAGO_DE_REMESA = line[FQCaptureMeta.OFFSET_numFields
 				+ FPL_EM_ORDEN.IDXT_PAGO_DE_REMESA + offset];
 		// "," has been sent as decimal separator, read from constants
@@ -422,33 +446,9 @@ public class PL_EM_ORDEN implements Metrics, FMetrics {
 		this.Localidad_Destino = fields[FPL_EM_ORDEN.IDXU_Localidad_Destino];
 		this.Provincia_Destino = fields[FPL_EM_ORDEN.IDXU_Provincia_Destino];
 		this.Pais_Destino = fields[FPL_EM_ORDEN.IDXU_Pais_Destino];
-
-	}
-
-	@Override
-	public String toString() {
-		return "PL_EM_ORDEN [DATOS_P=" + DATOS_P + ", DATOS_Q=" + DATOS_Q
-				+ ", CODIGO_EMPRESA=" + CODIGO_EMPRESA + ", CODIGO_CENTRO="
-				+ CODIGO_CENTRO + ", EMPRESA_ORDENANTE=" + EMPRESA_ORDENANTE
-				+ ", CENTRO_ORDENANTE=" + CENTRO_ORDENANTE + ", ESTADO_PAGO="
-				+ ESTADO_PAGO + ", TIPO_ORDEN=" + TIPO_ORDEN + ", CODIGO_PAIS="
-				+ CODIGO_PAIS + ", INDICADOR_RESIDENTE=" + INDICADOR_RESIDENTE
-				+ ", MEDIO_FINANCIERO=" + MEDIO_FINANCIERO
-				+ ", INDICADOR_INMEDIATEZ=" + INDICADOR_INMEDIATEZ
-				+ ", CODIGO_EMPRESA_DESTINO=" + CODIGO_EMPRESA_DESTINO
-				+ ", CODIGO_CENTRO_DESTINO=" + CODIGO_CENTRO_DESTINO
-				+ ", CANAL_OPERACION=" + CANAL_OPERACION + ", USUARIO_ALTA="
-				+ USUARIO_ALTA + ", TIMESPTAMP_ALTA=" + TIMESPTAMP_ALTA
-				+ ", USUARIO_MODIFICACION=" + USUARIO_MODIFICACION
-				+ ", TIMESTAMP_MODIFICACION=" + TIMESTAMP_MODIFICACION
-				+ ", PAGO_DE_REMESA=" + PAGO_DE_REMESA + ", Importe=" + Importe
-				+ ", Moneda=" + Moneda + ", Banco_Origen=" + Banco_Origen
-				+ ", Localidad_Origen=" + Localidad_Origen
-				+ ", Provincia_Origen=" + Provincia_Origen + ", Pais_Origen="
-				+ Pais_Origen + ", Banco_Destino=" + Banco_Destino
-				+ ", Localidad_Destino=" + Localidad_Destino
-				+ ", Provincia_Destino=" + Provincia_Destino
-				+ ", Pais_Destino=" + Pais_Destino + "]";
+		this.coordenadasOrigen = fields[FPL_EM_ORDEN.IDXU_COORDENADA_ORIGEN];
+		this.coordenadasDestino = fields[FPL_EM_ORDEN.IDXU_COORDENADA_DESTINO];
+		
 	}
 
 }
