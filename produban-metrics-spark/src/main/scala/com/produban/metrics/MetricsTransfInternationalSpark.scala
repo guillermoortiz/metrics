@@ -28,16 +28,20 @@ object MetricsTransfInternationalSpark {
     val transferData: ArrayBuffer[String] = ArrayBuffer();
     val bankRawData: ArrayBuffer[String] = ArrayBuffer();
 
+    //create a new array[String] with the concatenation of all banks
     for (bankMessage <- banks) {
       val extraData = FactoryParser.parser(topicBankSplit, bankMessage)
       bankData ++= extraData
       bankRawData ++= bankMessage
     }
+    
+    //create just one array[String] with concatenation of transference and banks
     val banksLine = bankRawData.toArray
     transferData ++= FactoryParser.parser(topicTransfSplit, transf.head)
     transferData ++= bankData
     val finalLine = transf.head ++ banksLine
 
+    //Generate json to ES
     val metrics = FactoryCreator.createMetric(topicTransfSplit, finalLine, transferData.toArray)
     val documentType = metrics.getDATOS_P().getTabla()
     val json = JsonUtil.write(metrics)
@@ -46,13 +50,20 @@ object MetricsTransfInternationalSpark {
   }
 
   def main(args: Array[String]) {
-
-    val sparkConf = new SparkConf().setMaster("local[2]")
+	  if (args.length != 1){
+      println("It's neccesary one parameter");
+      println("First, kafka brokers paratemers separater by ,. Ex: quickstart01.cloudera:9092,quickstart02.cloudera:9092");      
+      System.exit(-1);
+    }
+    
+    
+    
+    val sparkConf = new SparkConf().setMaster("local[4]").setAppName("app") 
     //val sparkConf = new SparkConf()
     val ssc = new StreamingContext(sparkConf, Seconds(10))
 
     //val kafkaParams = Map[String, String]("metadata.broker.list" -> kafkaHosts)
-    val kafkaParams = Map[String, String]("metadata.broker.list" -> "quickstart.cloudera:9092")
+    val kafkaParams = Map[String, String]("metadata.broker.list" -> args(0))
 
     val topic1 = Set(topicTransf)
     val topic2 = Set(topicBank)
@@ -107,6 +118,7 @@ object MetricsTransfInternationalSpark {
       val tranf = join._2._1
       val banks = join._2._2
 
+      //log
       println("id2:" + join._1);
       join._2._1.foreach(s => println("T2:" + runtime.ScalaRunTime.stringOf(s)))
       join._2._2.foreach(s => println("B2:" + runtime.ScalaRunTime.stringOf(s)))

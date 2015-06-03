@@ -44,7 +44,7 @@ object MetricsSpark {
   def main(args: Array[String]) {
     if (args.length != 2){
       println("It's neccesary two parameter");
-      println("First, zookeeper paratemers separater by ,. Ex: quickstart01.cloudera:9092,quickstart02.cloudera:9092");
+      println("First, kafka brokers paratemers separater by ,. Ex: quickstart01.cloudera:9092,quickstart02.cloudera:9092");
       println("Second, name of the topics to read separater by ,. Ex: topic1,topic2");
       System.exit(-1);
     }
@@ -53,7 +53,7 @@ object MetricsSpark {
     val sparkConf = new SparkConf().setMaster("local[2]").setAppName("app")    
     //val sparkConf = new SparkConf()
     val ssc = new StreamingContext(sparkConf, Seconds(5))
-    
+  
     
     //val kafkaParams = Map[String, String]("metadata.broker.list" -> kafkaHosts)
     val kafkaParams = Map[String, String]("metadata.broker.list" -> args(0))
