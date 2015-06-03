@@ -28,6 +28,12 @@ public class LoadCache {
 	private static final String PATH_PAIS = "/user/ingesta/PRO/landing/PAIS/part-m-00000";
 	private static final String PATH_PLAZA = "/user/ingesta/PRO/landing/PLAZA/part-m-00000";
 	private static final String PATH_PROVINCIA = "/user/ingesta/PRO/landing/PROVINCIA/part-m-00000";
+	private static final String PATH_COORDENADAS_NACIONALES = "/usr/metrics/conf/locations/localCities.csv";
+	// private static final String PATH_COORDENADAS_NACIONALES =
+	// "c:\\user\\metrics\\conf\\coordenadas\\esp\\municipiosEsp.csv";
+	private static final String PATH_COORDENADAS_INTERNACIONALES = "/usr/metrics/conf/locations/internationalCities.csv";
+	// private static final String PATH_COORDENADAS_INTERNACIONALES =
+	// "c:\\user\\metrics\\conf\\coordenadas\\int\\internationalCities.txt2";
 
 	private static final String FILE_CENTRO = "/usr/metrics/conf/loadCache/CENTRO";
 	private static final String FILE_EMPRESA_PRODUCT = "/usr/metrics/conf/loadCache/EMPRESA_PRODUCT";
@@ -40,7 +46,7 @@ public class LoadCache {
 	private static final String FILE_PROVINCIA = "/usr/metrics/conf/loadCache/PROVINCIA";
 
 	enum Tables {
-		CENTRO, EMPRESA_PRODUCT, ENTIDAD_CREDITO, ENT_CRED_EXT, OFICI_BANCARIA, OFI_ENT_EXT, PAIS, PLAZA, PROVINCIA
+		CENTRO, EMPRESA_PRODUCT, ENTIDAD_CREDITO, ENT_CRED_EXT, OFICI_BANCARIA, OFI_ENT_EXT, PAIS, PLAZA, PROVINCIA, COORDENADAS_NACIONALES, COORDENADAS_INTERNACIONALES
 	}
 
 	private List<String> readLines(final String pathHFFS, final String fileConf)
@@ -126,11 +132,34 @@ public class LoadCache {
 		case PROVINCIA:
 			// key: PV:codPais+codProvincia
 			// value: provincia
-			int[] keyPV = {0};
-			int[] valuePV = {3, 10};
+			int[] keyPV = { 0 };
+			int[] valuePV = { 3, 10 };
 			lines = readLines(PATH_PROVINCIA, FILE_PROVINCIA);
 			filterLines = filterList(lines, K.CACHE.TABLE_PROVINCIA_ID, keyPV,
 					valuePV);
+			break;
+
+		//TODO Now, this files are loaded all times. Fix and check if it's necessary to load.
+		case COORDENADAS_NACIONALES:
+			// key: COE:NombreMunicipio
+			// value: latitud,longitud
+			int keyC = 0;
+			int valueC = 1;
+			lines = FileUtils.readLines(new File(PATH_COORDENADAS_NACIONALES));
+			filterLines = filterList(lines,
+					K.CACHE.TABLE_COORDENADAS_NACIONALES_ID, keyC, valueC);
+			break;
+
+		case COORDENADAS_INTERNACIONALES:
+			// key: COE:NombreMunicipioInternacional
+			// value: latitud,longitud
+			int keyCI = 0;
+			int valueCI = 1;
+			lines = FileUtils.readLines(new File(
+					PATH_COORDENADAS_INTERNACIONALES));
+			filterLines = filterList(lines,
+					K.CACHE.TABLE_COORDENADAS_INTERNACIONALES_ID, keyCI,
+					valueCI);
 			break;
 
 		default:
@@ -208,7 +237,6 @@ public class LoadCache {
 	}
 
 	public static void main(String[] args) throws IOException {
-
 		LoadCache loadCache = new LoadCache();
 		CacheManager cacheManager = Factory.getCacheManager();
 
@@ -219,6 +247,6 @@ public class LoadCache {
 			LOG.info("Table name:" + table + " number records:"
 					+ filterLines.size());
 			cacheManager.setBulkLoad(filterLines);
-		}		
+		}
 	}
 }
