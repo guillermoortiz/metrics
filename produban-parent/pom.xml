@@ -18,8 +18,9 @@
 		<selenium.version>2.42.2</selenium.version>
 		<commons-configuration.version>1.6</commons-configuration.version>
 		<commons-dbcp.version>1.4</commons-dbcp.version>
-		<jackson.version>1.9.13</jackson.version>
-		<!-- <jackson.version>1.0.1</jackson.version> -->
+		<!-- <jackson.version>1.9.13</jackson.version>-->
+		<jackson.version>2.5.3</jackson.version>		
+		
 		<spark-streaming.version>1.1.1</spark-streaming.version>
 		<mongodb.version>2.12.4</mongodb.version>
 		<scala.version>2.10</scala.version>
