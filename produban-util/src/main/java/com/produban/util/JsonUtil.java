@@ -4,9 +4,9 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.ObjectWriter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import com.produban.util.exception.ProdubanException;
 
 /**
@@ -52,9 +52,9 @@ public final class JsonUtil {
 
 	public static String write(final Object aObject) {
 		String json;
-		try {
-			ObjectWriter ow = new ObjectMapper().writer()
-					.withDefaultPrettyPrinter();
+		try {			
+			ObjectWriter ow = om.writer()
+					.withDefaultPrettyPrinter();						
 			json = ow.writeValueAsString(aObject);
 			LOG.debug("Object parsed, json is: " + json);
 		} catch (IOException ex) {
