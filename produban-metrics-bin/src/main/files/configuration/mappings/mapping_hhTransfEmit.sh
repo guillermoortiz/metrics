@@ -1,5 +1,5 @@
-curl -XPUT http://quickstart.cloudera:9200/metrics/_mapping/TRANSFERENCIAS_INTERNACIONALES -d '{	
-      "TRANSFERENCIAS_INTERNACIONALES" : {
+curl -XPUT http://quickstart.cloudera:9200/metrics/_mapping/TRANSFERENCIAS_INTERNACIONALES -d '{
+	"TRANSFERENCIAS_INTERNACIONALES" : {
         "properties" : {
           "banco_RECEPTOR" : {
             "type" : "string","index" : "not_analyzed"
@@ -31,6 +31,9 @@ curl -XPUT http://quickstart.cloudera:9200/metrics/_mapping/TRANSFERENCIAS_INTER
           "codigo_USUARIO_ULTIMA_MODIFICACION" : {
             "type" : "string","index" : "not_analyzed"
           },
+          "coordenadasOrigen" : {
+            "type" : "geo_point"
+          },
           "datos_P" : {
             "properties" : {
               "celda" : {
@@ -57,7 +60,7 @@ curl -XPUT http://quickstart.cloudera:9200/metrics/_mapping/TRANSFERENCIAS_INTER
                 "format" : "dateOptionalTime"
               },
               "owner" : {
-                "type" : "string","index" : "not_analyzed"
+                 "type" : "string","index" : "not_analyzed"
               },
               "plan" : {
                 "type" : "string","index" : "not_analyzed"
@@ -84,6 +87,61 @@ curl -XPUT http://quickstart.cloudera:9200/metrics/_mapping/TRANSFERENCIAS_INTER
           },
           "gastos_EMISION" : {
             "type" : "string","index" : "not_analyzed"
+          },
+          "hh_datos_bancos" : {
+            "properties" : {
+              "banco_destino" : {
+                "type" : "string","index" : "not_analyzed"
+              },
+              "coordenadaDestino" : {
+                "type" : "geo_point"
+              },
+              "datos_P" : {
+                "properties" : {
+                  "celda" : {
+                    "type" : "string","index" : "not_analyzed"
+                  },
+                  "entidad" : {
+                    "type" : "string","index" : "not_analyzed"
+                  },
+                  "sistema" : {
+                    "type" : "string","index" : "not_analyzed"
+                  },
+                  "tabla" : {
+                    "type" : "string","index" : "not_analyzed"
+                  }
+                }
+              },
+              "datos_Q" : {
+                "properties" : {
+                  "evento" : {
+                    "type" : "string","index" : "not_analyzed"
+                  },
+                  "fecha_hora" : {
+                    "type" : "date",
+                    "format" : "dateOptionalTime"
+                  },
+                  "owner" : {
+                    "type" : "string","index" : "not_analyzed"
+                  },
+                  "plan" : {
+                    "type" : "string","index" : "not_analyzed"
+                  },
+                  "tabla" : {
+                    "type" : "string","index" : "not_analyzed"
+                  }
+                }
+              },
+              "localidad_destino" : {
+                "type" : "string","index" : "not_analyzed"
+              },
+              "pais_destino" : {
+                "type" : "string","index" : "not_analyzed"
+              },
+              "provincia_destino" : {
+                "type" : "string","index" : "not_analyzed"
+              }
+            }
           },
           "hhg_TIMESTAMP" : {
             "type" : "date",
@@ -124,9 +182,6 @@ curl -XPUT http://quickstart.cloudera:9200/metrics/_mapping/TRANSFERENCIAS_INTER
           },
           "provincia_origen" : {
             "type" : "string","index" : "not_analyzed"
-          },
-          "coordenadasOrigen" : {
-            "type" : "geo_point"
           }
         }
       }
