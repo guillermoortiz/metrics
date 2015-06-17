@@ -25,6 +25,7 @@ public interface FMetrics {
 		int IDXU_NombreSucursal = 2;
 		int IDXU_CodigoProducto = 3;
 		int IDXU_Producto = 4;
+		int IDXU_Coordenadas = 5;
 		
         
 	}

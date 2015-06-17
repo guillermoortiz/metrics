@@ -15,7 +15,7 @@ public class FilterMetrics implements KMetrics {
 	private static final int INDEX_CHECK_TYPE_OP = 6;
 	private static final String REPL = "REPL";
 	private static final String ISRT = "ISRT";
-	private static final String IND = "IND";
+	private static final String IND = "IND ";
 	private static final String B = "B";
 
 	/**
@@ -94,9 +94,9 @@ public class FilterMetrics implements KMetrics {
 	private static boolean filterHhTransfEmit(String[] splitLine) {
 		return splitLine[INDEX_CHECK_TYPE_ORDEN]
 				.equals(KMetrics.HH_TRANSF_EMIT.HH_TRANSF_EMIT)
-				&& splitLine[INDEX_CHECK_TYPE_OP].equals(ISRT)
-				&& splitLine[KMetrics.HH_TRANSF_EMIT.INDEX_CONS1].trim()
-						.equals(IND);
+				&& splitLine[INDEX_CHECK_TYPE_OP].equals(ISRT);
+				//&& splitLine[KMetrics.HH_TRANSF_EMIT.INDEX_CONS1]
+					//	.equals(IND);
 	}
 
 	private static boolean filterPlEmOrden(String[] splitLine) {
@@ -111,5 +111,4 @@ public class FilterMetrics implements KMetrics {
 		return splitLine[INDEX_CHECK_TYPE_ORDEN].equals(ULTALTA.ULTALTA)
 				&& splitLine[INDEX_CHECK_TYPE_OP].equals(REPL);
 	}
-
 }

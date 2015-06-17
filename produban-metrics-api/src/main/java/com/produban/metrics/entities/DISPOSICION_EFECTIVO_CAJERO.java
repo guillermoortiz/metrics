@@ -1,3 +1,4 @@
+
 package com.produban.metrics.entities;
 
 import java.io.Serializable;

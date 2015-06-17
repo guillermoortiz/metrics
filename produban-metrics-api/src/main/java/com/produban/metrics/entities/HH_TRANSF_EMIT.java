@@ -464,7 +464,6 @@ public class HH_TRANSF_EMIT implements Serializable, FMetrics, Metrics {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-
 		createHH_DATOS_BANCOS(produbanLine, line, fields);
 
 		// User data
@@ -479,6 +478,8 @@ public class HH_TRANSF_EMIT implements Serializable, FMetrics, Metrics {
 
 	private void createHH_DATOS_BANCOS(String[] produbanLine, String[] line,
 			String[] fields) {
+		
+		
 		int numBancos = (line.length - FHH_TRANSF_EMIT.LENGTH_HH_TRANSF)
 				/ FHH_DATOS_BANCOS.LENGTH_HH_DATOS_BANCOS;
 		hh_datos_bancos = new HH_DATOS_BANCOS[numBancos];
@@ -496,8 +497,9 @@ public class HH_TRANSF_EMIT implements Serializable, FMetrics, Metrics {
 			int stopExtraFields = startExtraFields
 					+ FHH_DATOS_BANCOS.LENGTH_EXTRA_FIELDS;
 			String[] extraFields = Arrays.copyOfRange(fields, startExtraFields,
-					stopExtraFields);
-
+					stopExtraFields);				
+		
+			
 			hh_datos_bancos[numBanco] = new HH_DATOS_BANCOS(produbanLine,
 					lineBanco, extraFields);
 		}
@@ -538,5 +540,7 @@ public class HH_TRANSF_EMIT implements Serializable, FMetrics, Metrics {
 				+ ", Pais_origen=" + Pais_origen + ", coordenadasOrigen="
 				+ coordenadasOrigen + "]";
 	}
+	
+	
 
 }

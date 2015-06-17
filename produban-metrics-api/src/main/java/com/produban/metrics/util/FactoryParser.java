@@ -90,7 +90,7 @@ public class FactoryParser implements KMetrics {
 					K.CACHE.TABLE_OFICI_BANCARIA_ID).split("\\|");
 			localidadDestino = recordOficinaDestino[0];
 			provinciaDestino = cache.get(recordOficinaDestino[1],
-					K.CACHE.TABLE_PROVINCIA_ID);
+					K.CACHE.TABLE_PROVINCIA_ID).split("\\|")[0];
 			paisDestino = cache.get(recordOficinaDestino[2],
 					K.CACHE.TABLE_PAIS_ID);			
 			coordenadaDestino = cache.get(localidadDestino,
@@ -132,23 +132,27 @@ public class FactoryParser implements KMetrics {
 
 		return extraParameters;
 	}
-
+	
 	// Codigo Empresa=0049,Codigo sucursal=0015,Nombre sucursal=ALCOBENDAS
-	// URBANA CONSTITUCION,Cdigo producto=211,Producto=CREDITOS GENERALES
+	// URBANA CONSTITUCION,Cdigo producto=211,Producto=CREDITOS GENERALES,CoordenadasOrigen=3324,
 	private static String[] parseUltalta(final String[] line) {
 		String[] extraParameters = new String[ULTALTA.EXTRA_PARAMS];
 		String codEmpresa = line[ULTALTA.INDEX_COD_EMPRESA];
 		String codSucursal = line[ULTALTA.INDEX_COD_SUCURSAL];
 		String codProducto = line[ULTALTA.INDEX_COD_PRODUCTO];
-
+		String[] centroLocalidad = cache.get(codEmpresa + codSucursal,
+				K.CACHE.TABLE_CENTRO_ID).split("\\|");
+		
 		extraParameters[0] = line[ULTALTA.INDEX_COD_EMPRESA];
 		extraParameters[1] = line[ULTALTA.INDEX_COD_SUCURSAL];
-		extraParameters[2] = cache.get(codEmpresa + codSucursal,
-				K.CACHE.TABLE_CENTRO_ID);
+		extraParameters[2] = centroLocalidad[0];
+		
 		extraParameters[3] = line[ULTALTA.INDEX_COD_PRODUCTO];
 		extraParameters[4] = cache.get(codEmpresa + codProducto,
 				K.CACHE.TABLE_EMPRESA_PRODUCT_ID);
-
+		extraParameters[5] = cache.get(centroLocalidad[1],
+				K.CACHE.TABLE_COORDENADAS_NACIONALES_ID);
+		
 		return extraParameters;
 	}
 
@@ -253,7 +257,7 @@ public class FactoryParser implements KMetrics {
 				K.CACHE.TABLE_OFICI_BANCARIA_ID).split("\\|");
 		String localidadOrigen = recordOficina[0];
 		String provinciaOrigen = cache.get(recordOficina[1],
-				K.CACHE.TABLE_PROVINCIA_ID);
+				K.CACHE.TABLE_PROVINCIA_ID).split("\\|")[0];
 		String paisOrigen = cache.get(recordOficina[2], K.CACHE.TABLE_PAIS_ID);
 		String coordenadaOrigen = cache.get(localidadOrigen,
 				K.CACHE.TABLE_COORDENADAS_NACIONALES_ID);

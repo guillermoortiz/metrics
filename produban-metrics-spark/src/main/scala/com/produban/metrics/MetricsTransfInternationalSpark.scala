@@ -12,6 +12,7 @@ import scala.collection.mutable.ArrayBuffer
 import com.produban.api.general.Factory
 import com.produban.metrics.util.FactoryCreator
 import com.produban.util.JsonUtil
+import scala.collection.mutable.ListBuffer
 
 object MetricsTransfInternationalSpark {
   val topicBank = "OB.MATRIX.HOST.HH_DATOS_BANCOS"
@@ -58,9 +59,9 @@ object MetricsTransfInternationalSpark {
     
     
     
-    val sparkConf = new SparkConf().setMaster("local[4]").setAppName("app") 
-    //val sparkConf = new SparkConf()
-    val ssc = new StreamingContext(sparkConf, Seconds(10))
+    //val sparkConf = new SparkConf().setMaster("local[4]").setAppName("app") 
+    val sparkConf = new SparkConf()
+    val ssc = new StreamingContext(sparkConf, Seconds(30))
 
     //val kafkaParams = Map[String, String]("metadata.broker.list" -> kafkaHosts)
     val kafkaParams = Map[String, String]("metadata.broker.list" -> args(0))
@@ -71,16 +72,20 @@ object MetricsTransfInternationalSpark {
     val stream1 = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, topic1)
     val stream2 = KafkaUtils.createDirectStream[String, String, StringDecoder, StringDecoder](ssc, kafkaParams, topic2)
 
-    val stream1Windows = stream1.window(Seconds(20), Seconds(10))
-    val stream2Windows = stream2.window(Seconds(20), Seconds(10))
+    val stream1Windows = stream1.window(Seconds(60), Seconds(30))
+    val stream2Windows = stream2.window(Seconds(60), Seconds(30))
 
-    //generate tuples(documentType,jsonMessage) for each message got from Kafka 
-    val emitTrans = stream1Windows.map { event =>
-      val eventCleaned = event._2.replace("\"", "")
-      eventCleaned.split("\\|")
+    
+    //generate an Array[Array[String]] for each message got from Kafka but it produce Array[String] because flatmap 
+    val emitTransFlat = stream1Windows.flatMap (event =>  event._2.split("\\n"))
+    val emitTrans = emitTransFlat.map{
+    	event =>
+    		val eventCleaned = event.replace("\"", "")    	 
+    		eventCleaned.split("\\|")  
     }
-
-    val emTransFiltered = emitTrans.filter(event => FilterMetrics.filter("HH_TRANSF_EMIT", event))
+            
+         
+    val emTransFiltered = emitTrans.filter(event => FilterMetrics.filter("HH_TRANSF_EMIT", event)) 
 
     //Generate tuple (idJoin, recordTransfer)
     val tupleEmTranf = emTransFiltered.map { register =>
@@ -90,15 +95,18 @@ object MetricsTransfInternationalSpark {
         register(KMetrics.HH_TRANSF_EMIT.INDEX_CHECK2)
       (id, register)
     }
-
-    //generate tuples(documentType,jsonMessage) for each message got from Kafka        
-    val banks = stream2Windows.map { event =>
-      val eventCleaned = event._2.replace("\"", "")
-      eventCleaned.split("\\|")
+    
+    val banksFlat = stream2Windows.flatMap (event =>  event._2.split("\\n"))
+    val banks = banksFlat.map{
+    	event =>
+    		val eventCleaned = event.replace("\"", "")    	 
+    		eventCleaned.split("\\|")  
     }
+    
+    
     //Check the mandatories fields for HH_TRANSF_EMIT.
-    val banksFiltered = banks.filter(event => FilterMetrics.filter("HH_DATOS_BANCOS", event))
-
+    val banksFiltered = banks.filter(event => FilterMetrics.filter("HH_DATOS_BANCOS", event))     
+    
     //Generate tuple (idJoin, recordBank)
     val tupleBanks = banksFiltered.map { register =>
       val id = register(KMetrics.HH_DATOS_BANCOS.INDEX_CHECK1) +
@@ -118,10 +126,9 @@ object MetricsTransfInternationalSpark {
       val tranf = join._2._1
       val banks = join._2._2
 
-      //log
-      println("id2:" + join._1);
-      join._2._1.foreach(s => println("T2:" + runtime.ScalaRunTime.stringOf(s)))
-      join._2._2.foreach(s => println("B2:" + runtime.ScalaRunTime.stringOf(s)))
+      //log      
+      tranf.foreach(s => println("T2:" + runtime.ScalaRunTime.stringOf(s)))
+      banks.foreach(s => println("B2:" + runtime.ScalaRunTime.stringOf(s)))
 
       (id, createObject(tranf, banks))
     }

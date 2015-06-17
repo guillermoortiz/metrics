@@ -51,12 +51,4 @@ public final class Factory {
 		return bean;
 	}
 
-
-	public static void main(String[] args) {
-		CacheManager manager = (CacheManager)Factory.getCacheManager();
-		manager.set("aa", "11");
-		System.out.println("-->" + manager.get("aa"));
-		
-	}
-	
 }

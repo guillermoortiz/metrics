@@ -1,6 +1,7 @@
 package com.produban.metrics.entities;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 import com.produban.metrics.util.FMetrics;
 import com.produban.metrics.util.FMetrics.COMMONS;

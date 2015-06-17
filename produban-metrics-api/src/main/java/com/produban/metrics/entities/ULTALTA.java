@@ -38,6 +38,7 @@ public class ULTALTA implements Metrics, FMetrics {
 	private String NombreSucursal;
 	private String CodigoProducto;
 	private String Producto;
+	private String coordenadasOrigen;
 	
 	
 	public QCaptureMeta getDATOS_Q() {
@@ -118,7 +119,14 @@ public class ULTALTA implements Metrics, FMetrics {
 	public void setProducto(String producto) {
 		Producto = producto;
 	}
+	
 		
+	public String getCoordenadasOrigen() {
+		return coordenadasOrigen;
+	}
+	public void setCoordenadasOrigen(String coordenadasOrigen) {
+		this.coordenadasOrigen = coordenadasOrigen;
+	}
 	public ULTALTA(String[] produbanLine, String[] line, String[] fields) {
 
 		Integer offset=0;
@@ -155,9 +163,9 @@ public class ULTALTA implements Metrics, FMetrics {
 		this.NombreSucursal=fields[FULTALTA.IDXU_NombreSucursal];
 		this.CodigoProducto=fields[FULTALTA.IDXU_CodigoProducto];
 		this.Producto=fields[FULTALTA.IDXU_Producto];
+		this.coordenadasOrigen=fields[FULTALTA.IDXU_Coordenadas];
 		
 	}
-
 	@Override
 	public String toString() {
 		return "ULTALTA [DATOS_P=" + DATOS_P + ", DATOS_Q=" + DATOS_Q
@@ -167,9 +175,6 @@ public class ULTALTA implements Metrics, FMetrics {
 				+ ", CodigoEmpresa=" + CodigoEmpresa + ", CodigoSucursal="
 				+ CodigoSucursal + ", NombreSucursal=" + NombreSucursal
 				+ ", CodigoProducto=" + CodigoProducto + ", Producto="
-				+ Producto + "]";
+				+ Producto + ", coordenadasOrigen=" + coordenadasOrigen + "]";
 	}
-	
-
-
 }

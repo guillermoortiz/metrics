@@ -8,7 +8,7 @@ public interface KMetrics {
 		int INDEX_COD_EMPRESA = 12;
 		int INDEX_COD_PRODUCTO = 14;
 		int INDEX_COD_SUCURSAL = 13;
-		int EXTRA_PARAMS = 5;		
+		int EXTRA_PARAMS = 6;		
 	}
 
 	interface OBDGOCONTAB {
