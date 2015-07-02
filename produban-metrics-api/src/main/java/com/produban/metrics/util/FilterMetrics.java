@@ -53,6 +53,10 @@ public class FilterMetrics implements KMetrics {
 			case HH_TRANSF_EMIT.HH_TRANSF_EMIT:
 				filter = filterHhTransfEmit(splitLine);
 				break;
+				
+			case KF_CUENTA_APERT.KF_CUENTA_APERT:
+				filter = filterHKfCuentaApertura(splitLine);
+				break;
 
 			default:
 				filter = false;
@@ -64,6 +68,11 @@ public class FilterMetrics implements KMetrics {
 		}
 
 		return filter;
+	}
+
+	private static boolean filterHKfCuentaApertura(String[] splitLine) {
+		return splitLine[INDEX_CHECK_TYPE_ORDEN].equals(KF_CUENTA_APERT.KF_CUENTA_APERT)
+				&& splitLine[INDEX_CHECK_TYPE_OP].equals(ISRT);
 	}
 
 	private static boolean filterObDgoContab(String[] splitLine) {
@@ -94,9 +103,9 @@ public class FilterMetrics implements KMetrics {
 	private static boolean filterHhTransfEmit(String[] splitLine) {
 		return splitLine[INDEX_CHECK_TYPE_ORDEN]
 				.equals(KMetrics.HH_TRANSF_EMIT.HH_TRANSF_EMIT)
-				&& splitLine[INDEX_CHECK_TYPE_OP].equals(ISRT);
-				//&& splitLine[KMetrics.HH_TRANSF_EMIT.INDEX_CONS1]
-					//	.equals(IND);
+				&& splitLine[INDEX_CHECK_TYPE_OP].equals(ISRT)
+				&& splitLine[KMetrics.HH_TRANSF_EMIT.INDEX_CONS1]
+						.equals(IND);
 	}
 
 	private static boolean filterPlEmOrden(String[] splitLine) {

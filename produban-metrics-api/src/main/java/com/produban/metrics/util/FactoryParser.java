@@ -1,9 +1,11 @@
 package com.produban.metrics.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 
 import com.produban.api.general.Factory;
 import com.produban.api.general.K;
@@ -17,42 +19,57 @@ import com.produban.api.manager.CacheManager;
  */
 public class FactoryParser implements KMetrics {
 
+	private static final Logger LOG = Logger.getLogger(FactoryParser.class);
 	// Singleton where query the final values
 	public static CacheManager cache = Factory.getCacheManager();
 
 	public static String[] parser(final String[] produbanLine,
 			final String[] line) {
-		String[] parseLine;
-		String type = produbanLine[COMMONS.INDEX_QUEUE_NAME];
+		String[] parseLine = null;
 
-		switch (type) {
-		case ULTALTA.ULTALTA:
-			parseLine = parseUltalta(line);
-			break;
+		try {
+			String type = produbanLine[COMMONS.INDEX_QUEUE_NAME];
+			switch (type) {
+			case ULTALTA.ULTALTA:
+				parseLine = parseUltalta(line);
+				break;
 
-		case PLEMORDEN.PL_EM_ORDEN:
-			parseLine = parsePlEmOrden(line);
-			break;
+			case PLEMORDEN.PL_EM_ORDEN:
+				parseLine = parsePlEmOrden(line);
+				break;
 
-		case OBDGOCONTAB.OB_DGO_CONTAB:
-			parseLine = parseObDgoContab(line);
-			break;
+			case OBDGOCONTAB.OB_DGO_CONTAB:
+				parseLine = parseObDgoContab(line);
+				break;
 
-		case HH_DATOS_BANCOS.HH_DATOS_BANCOS:
-			parseLine = parseHhDatosBancos(line);
-			break;
+			case HH_DATOS_BANCOS.HH_DATOS_BANCOS:
+				parseLine = parseHhDatosBancos(line);
+				break;
 
-		case HH_TRANSF_EMIT.HH_TRANSF_EMIT:
-			parseLine = parseHhTransfEmit(line);
-			break;
+			case HH_TRANSF_EMIT.HH_TRANSF_EMIT:
+				parseLine = parseHhTransfEmit(line);
+				break;
+				
+			case KF_CUENTA_APERT.KF_CUENTA_APERT:
+				parseLine = parseKfCuentaApertura(line);
+				break;
 
-		default:
-			parseLine = new String[0];
-			break;
+
+			default:
+				parseLine = new String[0];
+				break;
+			}
+		} catch (Exception e) {
+			LOG.error("Line isn't able to add new data:" + Arrays.deepToString(line), e);			
+			System.out.println("Error line:"
+					+ Arrays.deepToString(line));			
+			throw e;
 		}
 
 		return parseLine;
 	}
+
+	
 
 	// Importe=188,09,Moneda=EUR,Banco Origen=BANCO SANTANDER SA,Localidad
 	// Origen=ALCOBENDAS,Provincia Origen=MADRID,Pais Origen=ESPAA,Banco
@@ -92,7 +109,7 @@ public class FactoryParser implements KMetrics {
 			provinciaDestino = cache.get(recordOficinaDestino[1],
 					K.CACHE.TABLE_PROVINCIA_ID).split("\\|")[0];
 			paisDestino = cache.get(recordOficinaDestino[2],
-					K.CACHE.TABLE_PAIS_ID);			
+					K.CACHE.TABLE_PAIS_ID);
 			coordenadaDestino = cache.get(localidadDestino,
 					K.CACHE.TABLE_COORDENADAS_NACIONALES_ID);
 
@@ -103,9 +120,10 @@ public class FactoryParser implements KMetrics {
 					K.CACHE.TABLE_OFI_ENT_EXT_ID).split("\\|");
 			localidadDestino = recordOficinaDestino[0];
 			paisDestino = cache.get(recordOficinaDestino[1],
-					K.CACHE.TABLE_PAIS_ID);			
-			coordenadaDestino = cache.get(localidadDestino, K.CACHE.TABLE_COORDENADAS_INTERNACIONALES_ID);
-			
+					K.CACHE.TABLE_PAIS_ID);
+			coordenadaDestino = cache.get(localidadDestino,
+					K.CACHE.TABLE_COORDENADAS_INTERNACIONALES_ID);
+
 		}
 
 		coordenadaOrigen = cache.get(localidadOrigen,
@@ -132,9 +150,10 @@ public class FactoryParser implements KMetrics {
 
 		return extraParameters;
 	}
-	
+
 	// Codigo Empresa=0049,Codigo sucursal=0015,Nombre sucursal=ALCOBENDAS
-	// URBANA CONSTITUCION,Cdigo producto=211,Producto=CREDITOS GENERALES,CoordenadasOrigen=3324,
+	// URBANA CONSTITUCION,Cdigo producto=211,Producto=CREDITOS
+	// GENERALES,CoordenadasOrigen=3324,
 	private static String[] parseUltalta(final String[] line) {
 		String[] extraParameters = new String[ULTALTA.EXTRA_PARAMS];
 		String codEmpresa = line[ULTALTA.INDEX_COD_EMPRESA];
@@ -142,17 +161,49 @@ public class FactoryParser implements KMetrics {
 		String codProducto = line[ULTALTA.INDEX_COD_PRODUCTO];
 		String[] centroLocalidad = cache.get(codEmpresa + codSucursal,
 				K.CACHE.TABLE_CENTRO_ID).split("\\|");
-		
+
 		extraParameters[0] = line[ULTALTA.INDEX_COD_EMPRESA];
 		extraParameters[1] = line[ULTALTA.INDEX_COD_SUCURSAL];
 		extraParameters[2] = centroLocalidad[0];
-		
+
 		extraParameters[3] = line[ULTALTA.INDEX_COD_PRODUCTO];
 		extraParameters[4] = cache.get(codEmpresa + codProducto,
 				K.CACHE.TABLE_EMPRESA_PRODUCT_ID);
 		extraParameters[5] = cache.get(centroLocalidad[1],
 				K.CACHE.TABLE_COORDENADAS_NACIONALES_ID);
+
+		return extraParameters;
+	}
+	
+	//BancoOrigen, localidadOrigen, provinciaOrigen, PaisOrigen, CoordenadasOrigen
+	private static String[] parseKfCuentaApertura(String[] line) {
+		String[] extraParameters = new String[KF_CUENTA_APERT.EXTRA_PARAMS];		
 		
+		String codBancoOrigen = line[KF_CUENTA_APERT.INDEX_BANCO_ORIGEN];		
+		String codSucursalOrigen = line[KF_CUENTA_APERT.INDEX_SUCURSAL_ORIGEN];	
+		
+		String bancoOrigen = cache.get(codBancoOrigen,
+				K.CACHE.TABLE_ENTIDAD_CREDITO_ID);
+		String codProvinciaOrigen = codBancoOrigen + codSucursalOrigen;
+		String[] recordOficina = cache.get(codProvinciaOrigen,
+				K.CACHE.TABLE_OFICI_BANCARIA_ID).split("\\|");
+		String localidadOrigen = recordOficina[0];
+		String provinciaOrigen = cache.get(recordOficina[1],
+				K.CACHE.TABLE_PROVINCIA_ID).split("\\|")[0];
+		String paisOrigen = cache.get(recordOficina[2], K.CACHE.TABLE_PAIS_ID);
+
+		String coordenadaOrigen = cache.get(localidadOrigen,
+				K.CACHE.TABLE_COORDENADAS_NACIONALES_ID);
+		if (StringUtils.isEmpty(coordenadaOrigen)) {
+			coordenadaOrigen = "";
+		}
+		
+		extraParameters[0] = bancoOrigen;
+		extraParameters[1] = localidadOrigen;
+		extraParameters[2] = provinciaOrigen;
+		extraParameters[3] = paisOrigen;
+		extraParameters[4] = coordenadaOrigen;
+		 
 		return extraParameters;
 	}
 
@@ -264,7 +315,7 @@ public class FactoryParser implements KMetrics {
 		if (StringUtils.isEmpty(coordenadaOrigen)) {
 			coordenadaOrigen = "";
 		}
-		
+
 		extraParameters.add(importe);
 		extraParameters.add(moneda);
 		extraParameters.add(bancoOrigen);
@@ -309,4 +360,5 @@ public class FactoryParser implements KMetrics {
 		return extraParameters.toArray(new String[extraParameters.size()]);
 
 	}
+
 }

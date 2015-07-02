@@ -81,6 +81,18 @@ public interface KMetrics {
 		int INDEX_CHECK_999 = 71;
 		String CHECK1_VALUE_999 = "0009";
 	}
+	
+	interface KF_CUENTA_APERT {
+		// KF_CUENTA_APERT		
+		String KF_CUENTA_APERT = "KF_CUENTA_APERT";		
+		int INDEX_BANCO_ORIGEN = 76;
+		int INDEX_SUCURSAL_ORIGEN = 77;
+		
+		int EXTRA_PARAMS = 12;
+		
+
+						
+	}
 
 	interface COMMONS {
 		int INDEX_QUEUE_NAME = 3;

@@ -108,6 +108,8 @@ public interface FMetrics {
         String TOB_DGO_CONTAB = "OB_DGO_CONTAB";
         String TPAGOS_TPV = "OB_DGO_CONTAB";
         String TPL_EM_ORDEN = "PL_EM_ORDEN";
+        String TKF_CUENTA_APERT = "KF_CUENTA_APERT";
+        
         
         // Name of the table to be stored
         String NULTALTA = "ULTALTA";
@@ -117,6 +119,7 @@ public interface FMetrics {
         String NOB_DGO_CONTAB = "PL_EM_ORDEN";
         String NPAGOS_TPV = "PAGOS_TPV";
         String NPL_EM_ORDEN = "TRANSFERENCIAS_NACIONALES";
+        String NKF_CUENTA_APERT = "APERTURA_CUENTAS_123";
         
         // Other constants
         String DATE_FORMAT = "yyyy-MM-dd-hh.mm.ss.SSS";
@@ -249,6 +252,44 @@ public interface FMetrics {
 		int IDXT_Sistema = 1;
 		int IDXT_Celda = 2;
 		int IDXT_Tabla = 3;
+		
+	}
+	
+	interface FKF_CUENTA_APERT {
+		
+		// Offset from Q-Capture extra blank fields
+		int OFFSET_ISRT = 65;
+		int OFFSET_REPL = 0;
+		int OFFSET_DLET = 0;
+		int OFFSET_UKWN = 0;
+				
+		// Interesting table_data
+		int IDXT_CODIGO_EMPRESA = 0;
+		int IDXT_CODIGO_CENTRO = 1;
+		int IDXT_CODIGO_CUENTA_1 = 4;
+		int IDXT_CODIGO_CUENTA_2 = 6;
+		
+		// User data
+		int IDXU_Entidad_Contratacion = 1;
+		int IDXU_Oficina_Contratacion = 2;
+		
+		int CODIGO1_CUENTA_VISTA = 300;
+		int CODIGO2_CUENTA_VISTA = 313;
+		int CODIGO1_CUENTA_AHORRO = 301;
+		int CODIGO2_CUENTA_AHORRO = 541;
+		
+		String TIPO_CUENTA_VISTA = "A LA VISTA";
+		String TIPO_CUENTA_AHORRO = "AHORRO";
+		String TIPO_CUENTA_OTRO = "OTRO TIPO";
+		
+		int IDX_BANCO_ORIGEN = 0;
+		int IDX_LOCALIDAD_ORIGEN = 1;
+		int IDX_PROVINCIA_ORIGEN = 2;
+		int IDX_PAIS_ORIGEN = 3;
+		int IDX_COORDENADAS_ORIGEN = 4;
+
+		
+		
 		
 	}
 	
