@@ -30,13 +30,16 @@ object MetricsSpark {
    * Create a Tuple (documentType,json)
    */
   def createObject(message: Array[String], topic: Array[String]): (String,String) = {
-    val extraData = FactoryParser.parser(topic, message)
-    val metrics = FactoryCreator.createMetric(topic, message, extraData)
-    val documentType = metrics.getDATOS_P().getTabla()
-    val json = JsonUtil.write(metrics)    
-    println(json);    
     
-    return (documentType,json)
+    try{
+    	val extraData = FactoryParser.parser(topic, message)        
+    	val metrics = FactoryCreator.createMetric(topic, message, extraData)
+    	val documentType = metrics.getDATOS_P().getTabla()
+    	val json = JsonUtil.write(metrics)
+    	return (documentType,json)    	  
+    }catch {
+    	case t => return ("","")
+    }    
   }
   
   
@@ -50,8 +53,8 @@ object MetricsSpark {
     }
     
        
-    //val sparkConf = new SparkConf().setMaster("local[2]").setAppName("app")    
-    val sparkConf = new SparkConf()
+    val sparkConf = new SparkConf().setMaster("local[2]").setAppName("app")    
+    //val sparkConf = new SparkConf()
     val ssc = new StreamingContext(sparkConf, Seconds(5))
   
     
@@ -70,11 +73,21 @@ object MetricsSpark {
         val topic = osr.topic
         val splitTopic = topic.split("\\.")
         
-         //generate tuples(documentType,jsonMessage) for each message got from Kafka        
+         //generate tuples(documentType,jsonMessage) for each message got from Kafka  
+        val messageCleanFlat = kafkaEvent.flatMap (event =>  event._2.split("\\n"))
+		val messageClean = messageCleanFlat.map{
+		    	event =>
+		    		val eventCleaned = event.replace("\"", "")    	 
+		    		eventCleaned.split("\\|")  
+		}
+        
+        /*
         val messageClean = kafkaEvent.map { event =>
           val eventCleaned = event._2.replace("\"", "")
           eventCleaned.split("\\|")
-        }
+        }       
+        */
+        
         //Check the mandatories fields for each topic.
         val messagesFiltered = messageClean.filter( event => FilterMetrics.filter(splitTopic(3), event))
         
@@ -88,8 +101,8 @@ object MetricsSpark {
       documents.foreachPartition { it =>
         val indexer = Factory.getIndexerManager()
         
-        //TODO It could be done with Tuple2 directly, it should include scala-library dependency in produban-manager module
-        val documentsPair = it.map(document => new Pair(document._1,document._2))
+        //TODO It could be done with Tuple2 directly, it should include scala-library dependency in produban-manager module        
+        val documentsPair = it.filter(document => !document._1.equals("")).map(document => new Pair(document._1,document._2))
         indexer.indexDocuments(documentsPair.toArray)
 
         //Less efficient.
