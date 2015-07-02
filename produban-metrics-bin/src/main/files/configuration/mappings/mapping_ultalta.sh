@@ -1,6 +1,10 @@
 curl -XPUT http://quickstart.cloudera:9200/metrics/_mapping/ULTALTA -d '{		
       "ULTALTA" : {
-        "properties" : {
+        "_timestamp":{
+          	"enabled":true,
+          	"store":true
+          },
+        "properties" : {          
           "codigoEmpresa" : {
             "type" : "string","index" : "not_analyzed"
           },
@@ -33,7 +37,7 @@ curl -XPUT http://quickstart.cloudera:9200/metrics/_mapping/ULTALTA -d '{
               },
               "fecha_hora" : {
                 "type" : "date",
-                "format" : "dateOptionalTime"
+                "format" : "yyyy-MM-dd HH:mm:ss"
               },
               "owner" : {
                 "type" : "string","index" : "not_analyzed"
@@ -63,6 +67,9 @@ curl -XPUT http://quickstart.cloudera:9200/metrics/_mapping/ULTALTA -d '{
           },
           "uca_TIPOP" : {
             "type" : "string","index" : "not_analyzed"
+          },
+          "coordenadasOrigen" : {
+            "type" : "geo_point"
           },
           "uca_ULTALTA" : {
             "type" : "string","index" : "not_analyzed"

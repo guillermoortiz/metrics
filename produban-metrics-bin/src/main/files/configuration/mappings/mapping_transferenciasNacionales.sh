@@ -1,6 +1,10 @@
 curl -XPUT http://quickstart.cloudera:9200/metrics/_mapping/TRANSFERENCIAS_NACIONALES -d '{	
       "TRANSFERENCIAS_NACIONALES" : {
-        "properties" : {
+	      "_timestamp":{
+          	"enabled":true,
+          	"store":true
+          },
+        "properties" : {          
           "banco_Destino" : {
             "type" : "string",
             "index" : "not_analyzed"
@@ -65,7 +69,7 @@ curl -XPUT http://quickstart.cloudera:9200/metrics/_mapping/TRANSFERENCIAS_NACIO
               },
               "fecha_hora" : {
                 "type" : "date",
-                "format" : "dateOptionalTime"
+                "format" : "yyyy-MM-dd HH:mm:ss"
               },
               "owner" : {
                 "type" : "string",

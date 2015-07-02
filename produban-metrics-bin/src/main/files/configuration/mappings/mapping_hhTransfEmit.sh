@@ -1,6 +1,10 @@
 curl -XPUT http://quickstart.cloudera:9200/metrics/_mapping/TRANSFERENCIAS_INTERNACIONALES -d '{
 	"TRANSFERENCIAS_INTERNACIONALES" : {
-        "properties" : {
+		"_timestamp":{
+          	"enabled":true,
+          	"store":true
+          },
+        "properties" : {          
           "banco_RECEPTOR" : {
             "type" : "string","index" : "not_analyzed"
           },
@@ -57,7 +61,7 @@ curl -XPUT http://quickstart.cloudera:9200/metrics/_mapping/TRANSFERENCIAS_INTER
               },
               "fecha_hora" : {
                 "type" : "date",
-                "format" : "dateOptionalTime"
+                "format" : "yyyy-MM-dd HH:mm:ss"
               },
               "owner" : {
                  "type" : "string","index" : "not_analyzed"
@@ -87,7 +91,7 @@ curl -XPUT http://quickstart.cloudera:9200/metrics/_mapping/TRANSFERENCIAS_INTER
           },
           "gastos_EMISION" : {
             "type" : "string","index" : "not_analyzed"
-          },
+          },         
           "hh_datos_bancos" : {
             "properties" : {
               "banco_destino" : {
@@ -119,7 +123,7 @@ curl -XPUT http://quickstart.cloudera:9200/metrics/_mapping/TRANSFERENCIAS_INTER
                   },
                   "fecha_hora" : {
                     "type" : "date",
-                    "format" : "dateOptionalTime"
+                    "format" : "yyyy-MM-dd HH:mm:ss"
                   },
                   "owner" : {
                     "type" : "string","index" : "not_analyzed"
