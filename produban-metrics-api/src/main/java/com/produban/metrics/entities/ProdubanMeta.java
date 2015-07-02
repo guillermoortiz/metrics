@@ -49,6 +49,7 @@ public class ProdubanMeta implements Serializable, FMetrics {
 		this.Celda = produbanLine[FProdubanMeta.IDXT_Celda];
 		this.Tabla = produbanLine[FProdubanMeta.IDXT_Tabla];
 	}
+	
 	@Override
 	public String toString() {
 		return "ProdubanMeta [Entidad=" + Entidad + ", Sistema=" + Sistema

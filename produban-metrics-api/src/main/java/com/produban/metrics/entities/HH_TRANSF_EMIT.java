@@ -54,6 +54,10 @@ public class HH_TRANSF_EMIT implements Serializable, FMetrics, Metrics {
 	private Date FECHA_ULTIMA_MODIFICACION;
 
 	private HH_DATOS_BANCOS[] hh_datos_bancos;
+	/*private HH_DATOS_BANCOS hh_datos_bancos1;
+	private HH_DATOS_BANCOS hh_datos_bancos2;
+	private HH_DATOS_BANCOS hh_datos_bancos3;
+	private HH_DATOS_BANCOS hh_datos_bancos4;*/
 
 	// Data has been defined in the presentation, therefore "user data"
 	private BigDecimal Importe;
@@ -335,6 +339,40 @@ public class HH_TRANSF_EMIT implements Serializable, FMetrics, Metrics {
 	public void setCoordenadasOrigen(String coordenadasOrigen) {
 		this.coordenadasOrigen = coordenadasOrigen;
 	}
+	
+	/*
+
+	public HH_DATOS_BANCOS getHh_datos_bancos1() {
+		return hh_datos_bancos1;
+	}
+
+	public void setHh_datos_bancos1(HH_DATOS_BANCOS hh_datos_bancos1) {
+		this.hh_datos_bancos1 = hh_datos_bancos1;
+	}
+
+	public HH_DATOS_BANCOS getHh_datos_bancos2() {
+		return hh_datos_bancos2;
+	}
+
+	public void setHh_datos_bancos2(HH_DATOS_BANCOS hh_datos_bancos2) {
+		this.hh_datos_bancos2 = hh_datos_bancos2;
+	}
+
+	public HH_DATOS_BANCOS getHh_datos_bancos3() {
+		return hh_datos_bancos3;
+	}
+
+	public void setHh_datos_bancos3(HH_DATOS_BANCOS hh_datos_bancos3) {
+		this.hh_datos_bancos3 = hh_datos_bancos3;
+	}
+
+	public HH_DATOS_BANCOS getHh_datos_bancos4() {
+		return hh_datos_bancos4;
+	}
+
+	public void setHh_datos_bancos4(HH_DATOS_BANCOS hh_datos_bancos4) {
+		this.hh_datos_bancos4 = hh_datos_bancos4;
+	}*/
 
 	// Constructor
 	public HH_TRANSF_EMIT(String[] produbanLine, String[] line, String[] fields) {
@@ -465,7 +503,8 @@ public class HH_TRANSF_EMIT implements Serializable, FMetrics, Metrics {
 			e.printStackTrace();
 		}
 		createHH_DATOS_BANCOS(produbanLine, line, fields);
-
+		
+		
 		// User data
 		this.Moneda = fields[FHH_TRANSF_EMIT.IDXU_Moneda];
 		this.Banco_origen = fields[FHH_TRANSF_EMIT.IDXU_Banco_origen];
@@ -503,6 +542,22 @@ public class HH_TRANSF_EMIT implements Serializable, FMetrics, Metrics {
 			hh_datos_bancos[numBanco] = new HH_DATOS_BANCOS(produbanLine,
 					lineBanco, extraFields);
 		}
+		/*
+		if (hh_datos_bancos.length > 0){
+			hh_datos_bancos1 = hh_datos_bancos[0];
+		}
+		
+		if (hh_datos_bancos.length > 1){
+			hh_datos_bancos2 = hh_datos_bancos[1];
+		}
+		
+		if (hh_datos_bancos.length > 2){
+			hh_datos_bancos3 = hh_datos_bancos[2];
+		}
+		
+		if (hh_datos_bancos.length > 3){
+			hh_datos_bancos4 = hh_datos_bancos[3];
+		}*/
 
 	}
 

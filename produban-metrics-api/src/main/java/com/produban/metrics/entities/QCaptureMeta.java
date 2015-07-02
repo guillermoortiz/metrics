@@ -2,6 +2,7 @@ package com.produban.metrics.entities;
 
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -23,7 +24,7 @@ public class QCaptureMeta implements Serializable {
 	private String tabla;
 	private tipo_evento evento;
 	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date fecha_hora;
 	private String plan;
 	
@@ -85,9 +86,9 @@ public class QCaptureMeta implements Serializable {
 		
 		valor = Integer.parseInt(hourStr.substring(6,9));
 		cal.set(Calendar.MILLISECOND , valor);
-		
-		this.fecha_hora = cal.getTime();
 				
+		this.fecha_hora = cal.getTime();
+			
 		this.owner = line[FQCaptureMeta.IDXT_owner];
 		this.tabla = line[FQCaptureMeta.IDXT_tabla];
 		switch (line[6].toUpperCase()){

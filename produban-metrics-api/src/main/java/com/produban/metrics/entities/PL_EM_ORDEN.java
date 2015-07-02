@@ -440,7 +440,7 @@ public class PL_EM_ORDEN implements Metrics, FMetrics {
 		this.Moneda = fields[FPL_EM_ORDEN.IDXU_Moneda];
 		this.Banco_Origen = fields[FPL_EM_ORDEN.IDXU_Banco_Origen];
 		this.Localidad_Origen = fields[FPL_EM_ORDEN.IDXU_Localidad_Origen];
-		this.Provincia_Origen = fields[FPL_EM_ORDEN.IDXU_Localidad_Destino];
+		this.Provincia_Origen = fields[FPL_EM_ORDEN.IDXU_Provincia_Origen];
 		this.Pais_Origen = fields[FPL_EM_ORDEN.IDXU_Pais_Origen];
 		this.Banco_Destino = fields[FPL_EM_ORDEN.IDXU_Banco_Destino];
 		this.Localidad_Destino = fields[FPL_EM_ORDEN.IDXU_Localidad_Destino];
