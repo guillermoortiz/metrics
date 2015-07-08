@@ -24,7 +24,7 @@ public class QCaptureMeta implements Serializable {
 	private String tabla;
 	private tipo_evento evento;
 	
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")//,timezone="CET")
 	private Date fecha_hora;
 	private String plan;
 	
@@ -76,7 +76,7 @@ public class QCaptureMeta implements Serializable {
 		cal.set(Calendar.DAY_OF_YEAR,valor);
 		
 		valor = Integer.parseInt(hourStr.substring(0,2));
-		cal.set(Calendar.HOUR, valor);
+		cal.set(Calendar.HOUR_OF_DAY, valor);
 		
 		valor = Integer.parseInt(hourStr.substring(2,4));
 		cal.set(Calendar.MINUTE , valor);

@@ -90,7 +90,7 @@ public class FactoryParser implements KMetrics {
 				K.CACHE.TABLE_OFICI_BANCARIA_ID).split("\\|");
 		String localidadOrigen = recordOficina[0];
 		String provinciaOrigen = cache.get(recordOficina[1],
-				K.CACHE.TABLE_PROVINCIA_ID);
+				K.CACHE.TABLE_PROVINCIA_ID).split("\\|")[0];
 		String paisOrigen = cache.get(recordOficina[2], K.CACHE.TABLE_PAIS_ID);
 
 		String paisDestino;
@@ -128,12 +128,7 @@ public class FactoryParser implements KMetrics {
 
 		coordenadaOrigen = cache.get(localidadOrigen,
 				K.CACHE.TABLE_COORDENADAS_NACIONALES_ID);
-		if (StringUtils.isEmpty(coordenadaDestino)) {
-			coordenadaDestino = "";
-		}
-		if (StringUtils.isEmpty(coordenadaOrigen)) {
-			coordenadaOrigen = "";
-		}
+		
 
 		extraParameters[0] = line[PLEMORDEN.INDEX_IMPORTE];
 		extraParameters[1] = line[PLEMORDEN.INDEX_MONEDA];
@@ -194,9 +189,7 @@ public class FactoryParser implements KMetrics {
 
 		String coordenadaOrigen = cache.get(localidadOrigen,
 				K.CACHE.TABLE_COORDENADAS_NACIONALES_ID);
-		if (StringUtils.isEmpty(coordenadaOrigen)) {
-			coordenadaOrigen = "";
-		}
+		
 		
 		extraParameters[0] = bancoOrigen;
 		extraParameters[1] = localidadOrigen;
@@ -240,9 +233,7 @@ public class FactoryParser implements KMetrics {
 
 		String coordenadaTPV = cache.get(localidad,
 				K.CACHE.TABLE_COORDENADAS_NACIONALES_ID);
-		if (StringUtils.isEmpty(coordenadaTPV)) {
-			coordenadaTPV = "";
-		}
+		
 
 		extraParameters[0] = importe;
 		extraParameters[1] = moneda;
@@ -273,10 +264,7 @@ public class FactoryParser implements KMetrics {
 
 		String coordenadaTPV = cache.get(localidad,
 				K.CACHE.TABLE_COORDENADAS_NACIONALES_ID);
-		if (StringUtils.isEmpty(coordenadaTPV)) {
-			coordenadaTPV = "";
-		}
-
+		
 		extraParameters[0] = importe;
 		extraParameters[1] = moneda;
 		extraParameters[2] = banco;
@@ -312,10 +300,7 @@ public class FactoryParser implements KMetrics {
 		String paisOrigen = cache.get(recordOficina[2], K.CACHE.TABLE_PAIS_ID);
 		String coordenadaOrigen = cache.get(localidadOrigen,
 				K.CACHE.TABLE_COORDENADAS_NACIONALES_ID);
-		if (StringUtils.isEmpty(coordenadaOrigen)) {
-			coordenadaOrigen = "";
-		}
-
+		
 		extraParameters.add(importe);
 		extraParameters.add(moneda);
 		extraParameters.add(bancoOrigen);
@@ -348,9 +333,7 @@ public class FactoryParser implements KMetrics {
 				K.CACHE.TABLE_PAIS_ID);
 		String coordenadaDestino = cache.get(localidadDestino,
 				K.CACHE.TABLE_COORDENADAS_INTERNACIONALES_ID);
-		if (StringUtils.isEmpty(coordenadaDestino)) {
-			coordenadaDestino = "";
-		}
+		
 		extraParameters.add(bancoDestino);
 		extraParameters.add(localidadDestino);
 		extraParameters.add("");
