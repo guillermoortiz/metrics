@@ -58,14 +58,14 @@ public class LoadCache {
 //	private static final String PATH_ENT_CRED_EXT = "/pro/landing/tablas_generales/ent_cred_ext/fecha_carga=20150625/part-m-00000";
 //	private static final String PATH_OFICI_BANCARIA = "/pro/landing/tablas_generales/ofici_bancaria/fecha_carga=20150625/part-m-00000";
 //	private static final String PATH_OFI_ENT_EXT = "/pro/landing/tablas_generales/ofi_ent_ext/fecha_carga=20150625/part-m-00000";	
-//	private static final String PATH_COORDENADAS_NACIONALES = "/opt/metrics/conf/locations/localCities.csv";
-//	private static final String PATH_COORDENADAS_INTERNACIONALES = "/opt/metrics/conf/locations/internationalCities.csv";
+	private static final String PATH_COORDENADAS_NACIONALES = "/opt/metrics/conf/locations/localCities.csv";
+	private static final String PATH_COORDENADAS_INTERNACIONALES = "/opt/metrics/conf/locations/internationalCities.csv";
 
-	 private static final String PATH_COORDENADAS_NACIONALES =
-	 "c:\\usr\\metrics\\conf\\locations\\localCities.csv";
-
-	 private static final String PATH_COORDENADAS_INTERNACIONALES =
-	 "c:\\usr\\metrics\\conf\\locations\\internationalCities.csv";
+//	 private static final String PATH_COORDENADAS_NACIONALES =
+//	 "c:\\usr\\metrics\\conf\\locations\\localCities.csv";
+//
+//	 private static final String PATH_COORDENADAS_INTERNACIONALES =
+//	 "c:\\usr\\metrics\\conf\\locations\\internationalCities.csv";
 
 	private static final String FILE_CENTRO = "/opt/metrics/conf/loadCache/CENTRO";
 	private static final String FILE_EMPRESA_PRODUCT = "/opt/metrics/conf/loadCache/EMPRESA_PRODUCT";
